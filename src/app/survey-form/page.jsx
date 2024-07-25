@@ -445,7 +445,7 @@ const EmployeeHappinessSurvey = () => {
                                 <FormControl key={index} mt={5} isRequired>
                                     <FormLabel>{field.label}</FormLabel>
                                     <Grid
-                                        templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
+                                        templateColumns="repeat(auto-fit, minmax(200px, 1fr))"
                                         mt={4}
                                         gap={4}
                                     >
