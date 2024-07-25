@@ -52,83 +52,83 @@ const surveySchema = new Schema(
       required: true,
     },
     leadershipConfidence: {
-      type: String,
+      type: Number,
       required: true,
     },
     roleUnderstanding: {
-      type: String,
+      type: Number,
       required: true,
     },
     managementCommunication: {
-      type: String,
+      type: Number,
       required: true,
     },
     fairTreatment: {
-      type: String,
+      type: Number,
       required: true,
     },
     valuedEmployee: {
-      type: String,
+      type: Number,
       required: true,
     },
     useSkills: {
-      type: String,
+      type: Number,
       required: true,
     },
     resourcesSupport: {
-      type: String,
+      type: Number,
       required: true,
     },
     shareIdeas: {
-      type: String,
+      type: Number,
       required: true,
     },
     meritBasedPromotions: {
-      type: String,
+      type: Number,
       required: true,
     },
     rewardedForPerformance: {
-      type: String,
+      type: Number,
       required: true,
     },
     treatedWithRespect: {
-      type: String,
+      type: Number,
       required: true,
     },
     fairWorkload: {
-      type: String,
+      type: Number,
       required: true,
     },
     goodWorkingRelationship: {
-      type: String,
+      type: Number,
       required: true,
     },
     teamSupport: {
-      type: String,
+      type: Number,
       required: true,
     },
     enjoyColleagues: {
-      type: String,
+      type: Number,
       required: true,
     },
     senseOfCamaraderie: {
-      type: String,
+      type: Number,
       required: true,
     },
     proudOfWork: {
-      type: String,
+      type: Number,
       required: true,
     },
     prideInQuality: {
-      type: String,
+      type: Number,
       required: true,
     },
     positiveImpact: {
-      type: String,
+      type: Number,
       required: true,
     },
     proudToTell: {
-      type: String,
+      type: Number,
       required: true,
     },
     workloadDistribution: {

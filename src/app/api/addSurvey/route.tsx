@@ -22,6 +22,11 @@ const getRating = (data) => {
   return 5;
 };
 
+//@ts-ignore
+const getYesNoRating = (data) => {
+  return data == "Yes" ? 1 : 0;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
@@ -42,6 +47,25 @@ export async function POST(request: NextRequest) {
       employeeId: data.employeeId,
       employeeName: data.employeeName,
       department: data.department,
+      roleUnderstanding: getYesNoRating(data.roleUnderstanding),
+      managementCommunication: getYesNoRating(data.managementCommunication),
+      fairTreatment: getYesNoRating(data.fairTreatment),
+      valuedEmployee: getYesNoRating(data.valuedEmployee),
+      useSkills: getYesNoRating(data.useSkills),
+      resourcesSupport: getYesNoRating(data.resourcesSupport),
+      shareIdeas: getYesNoRating(data.shareIdeas),
+      meritBasedPromotions: getYesNoRating(data.meritBasedPromotions),
+      rewardedForPerformance: getYesNoRating(data.rewardedForPerformance),
+      treatedWithRespect: getYesNoRating(data.treatedWithRespect),
+      fairWorkload: getYesNoRating(data.fairWorkload),
+      goodWorkingRelationship: getYesNoRating(data.goodWorkingRelationship),
+      teamSupport: getYesNoRating(data.teamSupport),
+      enjoyColleagues: getYesNoRating(data.enjoyColleagues),
+      senseOfCamaraderie: getYesNoRating(data.senseOfCamaraderie),
+      proudOfWork: getYesNoRating(data.proudOfWork),
+      prideInQuality: getYesNoRating(data.prideInQuality),
+      positiveImpact: getYesNoRating(data.positiveImpact),
+      proudToTell: getYesNoRating(data.proudToTell),
       jobSatisfaction: getValue(data.jobSatisfaction),
       jobSatisfactionRating: getRating(data.jobSatisfaction),
       workLifeBalance: getValue(data.workLifeBalance),
@@ -50,89 +74,49 @@ export async function POST(request: NextRequest) {
       workLifeBalanceRating: getRating(data.workLifeBalance),
       workEnvironmentRating: getRating(data.workEnvironment),
       recognitionRating: getRating(data.recognition),
-      leadershipConfidence: data.leadershipConfidence,
-      roleUnderstanding: data.roleUnderstanding,
-      managementCommunication: data.managementCommunication,
-      fairTreatment: data.fairTreatment,
-      valuedEmployee: data.valuedEmployee,
-      useSkills: data.useSkills,
-      resourcesSupport: data.resourcesSupport,
-      shareIdeas: data.shareIdeas,
-      meritBasedPromotions: data.meritBasedPromotions,
-      rewardedForPerformance: data.rewardedForPerformance,
-      treatedWithRespect: data.treatedWithRespect,
-      fairWorkload: data.fairWorkload,
-      goodWorkingRelationship: data.goodWorkingRelationship,
-      teamSupport: data.teamSupport,
-      enjoyColleagues: data.enjoyColleagues,
-      senseOfCamaraderie: data.senseOfCamaraderie,
-      proudOfWork: data.proudOfWork,
-      prideInQuality: data.prideInQuality,
-      positiveImpact: data.positiveImpact,
-      proudToTell: data.proudToTell,
+      leadershipConfidence: getYesNoRating(data.leadershipConfidence),
       workloadDistribution: getValue(data.workloadDistribution),
       workloadDistributionRating: getRating(data.workloadDistribution),
-
       taskClarity: getValue(data.taskClarity),
       taskClarityRating: getRating(data.taskClarity),
-
       stressLevels: getValue(data.stressLevels),
       stressLevelsRating: getRating(data.stressLevels),
-
       overtime: getValue(data.overtime),
       overtimeRating: getRating(data.overtime),
-
       resourceAvailibility: getValue(data.resourceAvailibility),
       resourceAvailibilityRating: getRating(data.resourceAvailibility),
-
       timeManagement: getValue(data.timeManagement),
       timeManagementRating: getRating(data.timeManagement),
-
       teamRelationship: getValue(data.teamRelationship),
       teamRelationshipRating: getRating(data.teamRelationship),
-
       managementSupport: getValue(data.managementSupport),
       managementSupportRating: getRating(data.managementSupport),
-
       growthOpportunities: getValue(data.growthOpportunities),
       growthOpportunitiesRating: getRating(data.growthOpportunities),
-
       trainingAndDevelopment: getValue(data.trainingAndDevelopment),
       trainingAndDevelopmentRating: getRating(data.trainingAndDevelopment),
-
       compensationAndBenefits: getValue(data.compensationAndBenefits),
       compensationAndBenefitsRating: getRating(data.compensationAndBenefits),
-
       benefitsPackage: getValue(data.benefitsPackage),
       benefitsPackageRating: getRating(data.benefitsPackage),
-
       communication: getValue(data.communication),
       communicationRating: getRating(data.communication),
-
       communicationEffectiveness: getValue(data.communicationEffectiveness),
       communicationEffectivenessRating: getRating(data.communicationEffectiveness),
-
       feedbackMechanism: getValue(data.feedbackMechanism),
       feedbackMechanismRating: getRating(data.feedbackMechanism),
-
       companyCulture: getValue(data.companyCulture),
       companyCultureRating: getRating(data.companyCulture),
-
       futureProspects: getValue(data.futureProspects),
       futureProspectsRating: getRating(data.futureProspects),
-
       decisionMaking: getValue(data.decisionMaking),
       decisionMakingRating: getRating(data.decisionMaking),
-
       responsibility: getValue(data.responsibility),
       responsibilityRating: getRating(data.responsibility),
-
       wellnessPrograms: getValue(data.wellnessPrograms),
       wellnessProgramsRating: getRating(data.wellnessPrograms),
-
       mentalHealthSupport: getValue(data.mentalHealthSupport),
       mentalHealthSupportRating: getRating(data.mentalHealthSupport),
-
     });
 
     // Save the survey response to the database
