@@ -338,7 +338,7 @@ const EmployeeHappinessSurvey = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <CheckCircleIcon boxSize="50px" color="#DEECF6" />
+                                <CheckCircleIcon boxSize="50px" color="#green" />
                             </motion.div>
                             <Text fontSize='xl' fontWeight='bold' fontFamily={'Tahoma'} mt={4}>
                                 Thank you for your response! Your feedback has been submitted.

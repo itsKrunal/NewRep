@@ -20,20 +20,36 @@ const surveySchema = new Schema(
       required: true,
       enum: [-2, -1, 0, 1, 2], // Values from -2 to 2
     },
+    jobSatisfactionRating: {
+      type: Number,
+      required: true,
+    },
     workLifeBalance: {
       type: Number,
       required: true,
       enum: [-2, -1, 0, 1, 2],
+    },
+    workLifeBalanceRating: {
+      type: Number,
+      required: true,
     },
     workEnvironment: {
       type: Number,
       required: true,
       enum: [-2, -1, 0, 1, 2],
     },
+    workEnvironmentRating: {
+      type: Number,
+      required: true,
+    },
     recognition: {
       type: Number,
       required: true,
       enum: [-2, -1, 0, 1, 2],
+    },
+    recognitionRating: {
+      type: Number,
+      required: true,
     },
     leadershipConfidence: {
       type: String,

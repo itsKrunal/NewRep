@@ -13,6 +13,15 @@ const getValue = (data) => {
     return 2;
 };
 
+//@ts-ignore
+const getRating = (data) => {
+  if(data === "Very Unhappy") return 1;
+  if(data === "Unhappy") return 2;
+  if(data === "Satisfactory") return 3;
+  if(data === "Happy") return 4;
+  return 5;
+};
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json(); 
@@ -37,6 +46,10 @@ export async function POST(request: NextRequest) {
       workLifeBalance: getValue(data.workLifeBalance),
       workEnvironment: getValue(data.workEnvironment),
       recognition: getValue(data.recognition),
+      jobSatisfactionRating: getRating(data.jobSatisfaction),
+      workLifeBalanceRating: getRating(data.workLifeBalance),
+      workEnvironmentRating: getRating(data.workEnvironment),
+      recognitionRating: getRating(data.recognition),
       leadershipConfidence: data.leadershipConfidence,
       roleUnderstanding: data.roleUnderstanding,
       managementCommunication: data.managementCommunication,
