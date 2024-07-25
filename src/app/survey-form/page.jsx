@@ -390,6 +390,7 @@ const EmployeeHappinessSurvey = () => {
                                     <FormControl isRequired mt={4}>
                                         <FormLabel>Department</FormLabel>
                                         <Select
+                                            borderColor={'gray.400'}
                                             value={department}
                                             onChange={handleDepartmentChange}
                                             placeholder="Select your Department"
@@ -404,6 +405,7 @@ const EmployeeHappinessSurvey = () => {
                                     <FormControl isRequired>
                                         <FormLabel>Employee ID</FormLabel>
                                         <Input
+                                        borderColor={'gray.400'}
                                             value={ratings.employeeId || ''}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -423,6 +425,7 @@ const EmployeeHappinessSurvey = () => {
                                     <FormControl isRequired mt={4}>
                                         <FormLabel>Employee Name</FormLabel>
                                         <Input
+                                            borderColor={'gray.400'}
                                             value={ratings.employeeName || ''}
                                             onChange={(e) => setRatings({ ...ratings, employeeName: e.target.value })}
                                             placeholder="Enter your Employee Name"
