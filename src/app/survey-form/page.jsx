@@ -88,7 +88,7 @@ const EmployeeHappinessSurvey = () => {
                     duration: 3000,
                     isClosable: true,
                 });
-                // setSubmitted(true);
+                setSubmitted(true);
             } else {
                 toast({
                     title: "Submission Error",
