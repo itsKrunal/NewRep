@@ -130,7 +130,216 @@ const surveySchema = new Schema(
     proudToTell: {
       type: String,
       required: true,
-    }
+    },
+    workloadDistribution: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    workloadDistributionRating: {
+      type: Number,
+      required: true,
+    },
+    
+    taskClarity: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    taskClarityRating: {
+      type: Number,
+      required: true,
+    },
+    
+    stressLevels: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    stressLevelsRating: {
+      type: Number,
+      required: true,
+    },
+    
+    overtime: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    overtimeRating: {
+      type: Number,
+      required: true,
+    },
+    
+    resourceAvailibility: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    resourceAvailibilityRating: {
+      type: Number,
+      required: true,
+    },
+    
+    timeManagement: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    timeManagementRating: {
+      type: Number,
+      required: true,
+    },
+    
+    teamRelationship: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    teamRelationshipRating: {
+      type: Number,
+      required: true,
+    },
+    
+    managementSupport: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    managementSupportRating: {
+      type: Number,
+      required: true,
+    },
+    
+    growthOpportunities: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    growthOpportunitiesRating: {
+      type: Number,
+      required: true,
+    },
+    
+    trainingAndDevelopment: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    trainingAndDevelopmentRating: {
+      type: Number,
+      required: true,
+    },
+    
+    compensationAndBenefits: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    compensationAndBenefitsRating: {
+      type: Number,
+      required: true,
+    },
+    
+    benefitsPackage: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    benefitsPackageRating: {
+      type: Number,
+      required: true,
+    },
+    
+    communication: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    communicationRating: {
+      type: Number,
+      required: true,
+    },
+    
+    communicationEffectiveness: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    communicationEffectivenessRating: {
+      type: Number,
+      required: true,
+    },
+    
+    feedbackMechanism: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    feedbackMechanismRating: {
+      type: Number,
+      required: true,
+    },
+    
+    companyCulture: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    companyCultureRating: {
+      type: Number,
+      required: true,
+    },
+    
+    futureProspects: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    futureProspectsRating: {
+      type: Number,
+      required: true,
+    },
+    
+    decisionMaking: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    decisionMakingRating: {
+      type: Number,
+      required: true,
+    },
+    
+    responsibility: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    responsibilityRating: {
+      type: Number,
+      required: true,
+    },
+    
+    wellnessPrograms: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    wellnessProgramsRating: {
+      type: Number,
+      required: true,
+    },
+    
+    mentalHealthSupport: {
+      type: Number,
+      required: true,
+      enum: [-2, -1, 0, 1, 2],
+    },
+    mentalHealthSupportRating: {
+      type: Number,
+      required: true,
+    },
   },
   {
     collection: 'surveyResponses', // Set your desired collection name

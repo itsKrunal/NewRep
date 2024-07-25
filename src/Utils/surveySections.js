@@ -177,7 +177,190 @@ const surveySectionsArray = [
                 colors: ["#DEECF6", "#DEECF6"]
             }
         ]
-    }
+    },
+    {
+        title: "Work Load",
+        fields: [
+            {
+                label: "Workload Distribution",
+                name: "workloadDistribution",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Task Clarity",
+                name: "taskClarity",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Stress Levels",
+                name: "stressLevels",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Overtime",
+                name: "overtime",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Resource Availibility",
+                name: "resourceAvailibility",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Time Management",
+                name: "timeManagement",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            }
+        ]
+    },
+    {
+        title: "Team Relationship",
+        fields: [
+            {
+                label: "Team Relationship",
+                name: "teamRelationship",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+        ]
+    },
+    {
+        title: "Management Support",
+        fields: [
+            {
+                label: "Management Support",
+                name: "managementSupport",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+        ]
+    },
+    {
+        title: "Career Development",
+        fields: [
+            {
+                label: "Oppurtunities For Growth",
+                name: "growthOpputinities",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Training And Development",
+                name: "trainingAndDevelopment",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Compensation And Benefits",
+                name: "compensationAndBenefits",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+        ]
+    },
+    {
+        title: "Salary Satisfaction",
+        fields: [
+            {
+                label: "Benefits Package",
+                name: "benefitsPackage",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Communication",
+                name: "communication",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Communication Effectiveness",
+                name: "communicationEffectiveness",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Feedback Mechanism",
+                name: "feedbackMechanism",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Company Culture",
+                name: "companyCulture",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+        ]
+    },
+    {
+        title: "Job Stability",
+        fields: [
+            {
+                label: "Future Prospects",
+                name: "futureProspects",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Decision Making",
+                name: "decisionMaking",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Responsibility",
+                name: "responsibility",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            }
+        ]
+    },
+
+    {
+        title: "Physical And Mental Health",
+        fields: [
+            {
+                label: "Wellness Programs",
+                name: "wellnessPrograms",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+            {
+                label: "Mental Health Support",
+                name: "mentalHealthSupport",
+                options: ["Very Unhappy", "Unhappy", "Satisfactory", "Happy", "Very Happy"],
+                values: [-2, -1, 0, 1, 2],
+                colors: ["#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6", "#DEECF6"]
+            },
+        ]
+    },
 ];
 
 module.exports = surveySectionsArray

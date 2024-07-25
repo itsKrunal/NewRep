@@ -6,25 +6,25 @@ connect(); // Connect to MongoDB using your dbConfig
 
 //@ts-ignore
 const getValue = (data) => {
-    if(data === "Very Unhappy") return -2;
-    if(data === "Unhappy") return -1;
-    if(data === "Satisfactory") return 0;
-    if(data === "Happy") return 1;
-    return 2;
+  if (data === "Very Unhappy") return -2;
+  if (data === "Unhappy") return -1;
+  if (data === "Satisfactory") return 0;
+  if (data === "Happy") return 1;
+  return 2;
 };
 
 //@ts-ignore
 const getRating = (data) => {
-  if(data === "Very Unhappy") return 1;
-  if(data === "Unhappy") return 2;
-  if(data === "Satisfactory") return 3;
-  if(data === "Happy") return 4;
+  if (data === "Very Unhappy") return 1;
+  if (data === "Unhappy") return 2;
+  if (data === "Satisfactory") return 3;
+  if (data === "Happy") return 4;
   return 5;
 };
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json(); 
+    const data = await request.json();
     console.log(data);
 
     if (!data.employeeId || !data.employeeName || !data.department) {
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       employeeName: data.employeeName,
       department: data.department,
       jobSatisfaction: getValue(data.jobSatisfaction),
+      jobSatisfactionRating: getRating(data.jobSatisfaction),
       workLifeBalance: getValue(data.workLifeBalance),
       workEnvironment: getValue(data.workEnvironment),
       recognition: getValue(data.recognition),
-      jobSatisfactionRating: getRating(data.jobSatisfaction),
       workLifeBalanceRating: getRating(data.workLifeBalance),
       workEnvironmentRating: getRating(data.workEnvironment),
       recognitionRating: getRating(data.recognition),
@@ -69,7 +69,70 @@ export async function POST(request: NextRequest) {
       proudOfWork: data.proudOfWork,
       prideInQuality: data.prideInQuality,
       positiveImpact: data.positiveImpact,
-      proudToTell: data.proudToTell
+      proudToTell: data.proudToTell,
+      workloadDistribution: getValue(data.workloadDistribution),
+      workloadDistributionRating: getRating(data.workloadDistribution),
+
+      taskClarity: getValue(data.taskClarity),
+      taskClarityRating: getRating(data.taskClarity),
+
+      stressLevels: getValue(data.stressLevels),
+      stressLevelsRating: getRating(data.stressLevels),
+
+      overtime: getValue(data.overtime),
+      overtimeRating: getRating(data.overtime),
+
+      resourceAvailibility: getValue(data.resourceAvailibility),
+      resourceAvailibilityRating: getRating(data.resourceAvailibility),
+
+      timeManagement: getValue(data.timeManagement),
+      timeManagementRating: getRating(data.timeManagement),
+
+      teamRelationship: getValue(data.teamRelationship),
+      teamRelationshipRating: getRating(data.teamRelationship),
+
+      managementSupport: getValue(data.managementSupport),
+      managementSupportRating: getRating(data.managementSupport),
+
+      growthOpportunities: getValue(data.growthOpportunities),
+      growthOpportunitiesRating: getRating(data.growthOpportunities),
+
+      trainingAndDevelopment: getValue(data.trainingAndDevelopment),
+      trainingAndDevelopmentRating: getRating(data.trainingAndDevelopment),
+
+      compensationAndBenefits: getValue(data.compensationAndBenefits),
+      compensationAndBenefitsRating: getRating(data.compensationAndBenefits),
+
+      benefitsPackage: getValue(data.benefitsPackage),
+      benefitsPackageRating: getRating(data.benefitsPackage),
+
+      communication: getValue(data.communication),
+      communicationRating: getRating(data.communication),
+
+      communicationEffectiveness: getValue(data.communicationEffectiveness),
+      communicationEffectivenessRating: getRating(data.communicationEffectiveness),
+
+      feedbackMechanism: getValue(data.feedbackMechanism),
+      feedbackMechanismRating: getRating(data.feedbackMechanism),
+
+      companyCulture: getValue(data.companyCulture),
+      companyCultureRating: getRating(data.companyCulture),
+
+      futureProspects: getValue(data.futureProspects),
+      futureProspectsRating: getRating(data.futureProspects),
+
+      decisionMaking: getValue(data.decisionMaking),
+      decisionMakingRating: getRating(data.decisionMaking),
+
+      responsibility: getValue(data.responsibility),
+      responsibilityRating: getRating(data.responsibility),
+
+      wellnessPrograms: getValue(data.wellnessPrograms),
+      wellnessProgramsRating: getRating(data.wellnessPrograms),
+
+      mentalHealthSupport: getValue(data.mentalHealthSupport),
+      mentalHealthSupportRating: getRating(data.mentalHealthSupport),
+
     });
 
     // Save the survey response to the database
