@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export async function connect() {
     try {
         // Add your database name here
-        mongoose.connect('mongodb+srv://DeveloperTest:Developer2022DD@cluster0.puyhapm.mongodb.net/alpha?retryWrites=true&w=majority');
+        mongoose.connect(process.env.NEXT_PUBLIC_DB_SERVER);
         // await mongoose.connect('mongodb+srv://user1:es3IBLzvKSdMdRZh@cluster0.3cxsnbc.mongodb.net/alpha?retryWrites=true&w=majority', {
         //     useNewUrlParser: true,
         //     useUnifiedTopology: true
