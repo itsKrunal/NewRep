@@ -405,7 +405,7 @@ const EmployeeHappinessSurvey = () => {
                                     <FormControl isRequired>
                                         <FormLabel>Employee ID</FormLabel>
                                         <Input
-                                        borderColor={'gray.400'}
+                                            borderColor={'gray.400'}
                                             value={ratings.employeeId || ''}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -426,11 +426,19 @@ const EmployeeHappinessSurvey = () => {
                                         <FormLabel>Employee Name</FormLabel>
                                         <Input
                                             borderColor={'gray.400'}
+                                            type='text'
                                             value={ratings.employeeName || ''}
-                                            onChange={(e) => setRatings({ ...ratings, employeeName: e.target.value })}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                // Allow only letters and spaces
+                                                if (/^[A-Za-z\s]*$/.test(value)) {
+                                                    setRatings({ ...ratings, employeeName: value });
+                                                }
+                                            }}
                                             placeholder="Enter your Employee Name"
                                         />
                                     </FormControl>
+
                                 </>
                             )}
                             {currentSection.fields.map((field, index) => (
