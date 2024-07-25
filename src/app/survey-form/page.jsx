@@ -222,10 +222,9 @@ const EmployeeHappinessSurvey = () => {
     const [ratings, setRatings] = useState({});
     const [currentStep, setCurrentStep] = useState(0);
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleDepartmentChange = (event) => {
-        setDepartment(event.target.value);
-    };
+    const handleDepartmentChange = (event) => setDepartment(event.target.value);
 
     const handleRatingChange = (event, value) => {
         const name = event.currentTarget.getAttribute('name');
@@ -234,8 +233,9 @@ const EmployeeHappinessSurvey = () => {
             [name]: value
         });
     };
+
     const handleNext = () => {
-        if (isSectionComplete()) { // Add parentheses here to call the function
+        if (isSectionComplete()) {
             if (currentStep < surveySections.length - 1) {
                 setCurrentStep(currentStep + 1);
             } else {
@@ -252,18 +252,14 @@ const EmployeeHappinessSurvey = () => {
             });
         }
     };
-    
 
-    const handleBack = () => {
-        setCurrentStep(currentStep - 1);
-    };
+    const handleBack = () => setCurrentStep(currentStep - 1);
 
     const handleSubmit = async () => {
         try {
+            setLoading(true);
             const resp = await axios.post('/api/addSurvey', { ...ratings, department });
-
             if (resp.status === 201) {
-                // Success
                 toast({
                     title: "Survey Submitted",
                     description: "Thank you for your response! Your feedback has been submitted.",
@@ -272,9 +268,8 @@ const EmployeeHappinessSurvey = () => {
                     duration: 3000,
                     isClosable: true,
                 });
-                setSubmitted(true); // Assuming you want to set the submitted state here
+                setSubmitted(true);
             } else {
-                // Handle unexpected status codes
                 toast({
                     title: "Submission Error",
                     description: "Something went wrong. Please try again later.",
@@ -285,9 +280,7 @@ const EmployeeHappinessSurvey = () => {
                 });
             }
         } catch (error) {
-            // Error handling
             if (error.response && error.response.status === 400) {
-                // Specific error response from server
                 toast({
                     title: "Survey Already Submitted",
                     description: "You have already submitted a response for this Employee ID.",
@@ -297,7 +290,6 @@ const EmployeeHappinessSurvey = () => {
                     isClosable: true,
                 });
             } else {
-                // General error
                 toast({
                     title: "Submission Error",
                     description: "Something went wrong. Please try again later.",
@@ -307,6 +299,8 @@ const EmployeeHappinessSurvey = () => {
                     isClosable: true,
                 });
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -314,15 +308,10 @@ const EmployeeHappinessSurvey = () => {
 
     const isSectionComplete = () => {
         if (currentStep === 0) {
-            // Validate department, employeeId, and employeeName
             return department && /^\d{3,4}$/.test(ratings.employeeId) && ratings.employeeName?.trim().length > 0;
         }
-        // Validate other sections
         return currentSection.fields.every(field => ratings[field.name] !== undefined);
     };
-    
-    
-
 
     return (
         <Container
@@ -338,6 +327,7 @@ const EmployeeHappinessSurvey = () => {
             fontFamily={'Tahoma'}
             borderBottom="10px solid gray"
             borderTop="10px solid gray"
+            overflowX="auto" // To handle horizontal overflow on smaller screens
         >
             <Box as="form" onSubmit={handleSubmit} height={'max-content'}>
                 {submitted ? (
@@ -360,16 +350,40 @@ const EmployeeHappinessSurvey = () => {
                         <Flex
                             bg="#DEECF6"
                             p={4}
-                            justifyContent={'space-between'}
-                            alignItems={'center'}
+                            justifyContent={{ base: 'center', md: 'space-between' }} // Center on small screens, space-between on larger screens
+                            alignItems="center"
                             border={'5px solid gray'}
+                            flexDirection={{ base: 'column', md: 'row' }} // Stack items vertically on smaller screens
+                            textAlign={{ base: 'center', md: 'left' }} // Center text on smaller screens
                         >
-                            <Text w={'100%'} fontSize='xx-large' fontWeight='bolder' bg="#DEECF6" color="black" fontFamily={'Tahoma'} mt={5} p={2}>
+                            <Text
+                                w={{ base: '100%', md: 'auto' }} // Full width on small screens
+                                fontSize={{ base: 'xl', md: 'xx-large' }} // Responsive font size
+                                fontWeight='bolder'
+                                bg="#DEECF6"
+                                color="black"
+                                fontFamily={'Tahoma'}
+                                mt={5}
+                                p={2}
+                            >
                                 {currentSection.title}
                             </Text>
-                            <Image width={'320'} height={'370'} src="/desireLogo.png" />
-
+                            <Box
+                                display={{ base: 'block', md: 'block' }} // Display image on all screens
+                                mt={{ base: 4, md: 0 }} // Margin top for small screens
+                                textAlign="center" // Center image on small screens
+                            >
+                                <Image
+                                    src="/desireLogo.png"
+                                    alt="Desire Logo"
+                                    layout="responsive"
+                                    width={320}
+                                    height={370}
+                                />
+                            </Box>
                         </Flex>
+
+
                         <Box mt={10}>
                             {currentStep === 0 && (
                                 <>
@@ -406,7 +420,6 @@ const EmployeeHappinessSurvey = () => {
                                             </Text>
                                         )}
                                     </FormControl>
-
                                     <FormControl isRequired mt={4}>
                                         <FormLabel>Employee Name</FormLabel>
                                         <Input
@@ -417,12 +430,14 @@ const EmployeeHappinessSurvey = () => {
                                     </FormControl>
                                 </>
                             )}
-
-
                             {currentSection.fields.map((field, index) => (
                                 <FormControl key={index} mt={5} isRequired>
                                     <FormLabel>{field.label}</FormLabel>
-                                    <Grid templateColumns="repeat(auto-fit, minmax(120px, 1fr))" mt={4} gap={4}>
+                                    <Grid
+                                        templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
+                                        mt={4}
+                                        gap={4}
+                                    >
                                         {field.options.map((option, idx) => (
                                             <Button
                                                 fontWeight={'normal'}
@@ -430,7 +445,6 @@ const EmployeeHappinessSurvey = () => {
                                                 variant={ratings[field.name] === option ? 'solid' : 'outline'}
                                                 name={field.name}
                                                 value={option}
-
                                                 onClick={(e) => handleRatingChange(e, option)}
                                                 colorScheme='blue'
                                                 color={ratings[field.name] === option ? 'white' : ''}
@@ -442,7 +456,7 @@ const EmployeeHappinessSurvey = () => {
                                     </Grid>
                                 </FormControl>
                             ))}
-                            <Box mt={12}>
+                            <Box mt={12} display="flex" justifyContent="space-between">
                                 {currentStep !== 0 && (
                                     <Button onClick={handleBack} mr={2} colorScheme='gray'>
                                         Back
@@ -452,8 +466,9 @@ const EmployeeHappinessSurvey = () => {
                                     onClick={handleNext}
                                     colorScheme='blue'
                                     variant={'solid'}
+                                    isLoading={loading}
                                     disabled={!isSectionComplete || (currentStep === 0 && !department)}
-                                    _hover={{ backgroundColor: 'gray.600 ' }}
+                                    _hover={{ backgroundColor: 'gray.600' }}
                                 >
                                     {currentStep < surveySections.length - 1 ? 'Next' : 'Submit'}
                                 </Button>
