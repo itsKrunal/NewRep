@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 export async function connect() {
     try {
         // Add your database name here
-        mongoose.connect('mongodb+srv://DeveloperTest:Developer2022DD@cluster0.puyhapm.mongodb.net/alpha?retryWrites=true&w=majority');
+        mongoose.connect('mongodb+srv://deltamern:Yw7MX7q5PdQHDne6@cluster0.3cxsnbc.mongodb.net/alpha?retryWrites=true&w=majority');
+
         const connection = mongoose.connection;
         connection.on('connected', () => {
             console.log("MongoDb Connected Successfully");
