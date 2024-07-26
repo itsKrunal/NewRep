@@ -6,7 +6,7 @@ const Header = () => {
     return (
         <Box
             as="header"
-            bgGradient="linear(to-r, green.500, green.200)"
+            bgGradient="linear(to-r, green.500, green.500)"
             boxShadow="md"
         >
             <Flex
