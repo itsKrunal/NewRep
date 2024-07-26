@@ -49,12 +49,11 @@ export async function POST(request: NextRequest) {
     // Check if a survey response with the same employeeId already exists
     const existingSurvey = await SurveyModel.findOne({
       $or: [
-        { employeeId: data.employeeId },
         { email: email } // Assuming the email field is stored in your SurveyModel
       ]
     });
     if (existingSurvey) {
-      return NextResponse.json({ error: "Survey response already submitted for this Employee ID" }, { status: 400 });
+      return NextResponse.json({ error: "Survey response already submitted for this Email Address" }, { status: 400 });
     }
 
     // Create a new survey response document

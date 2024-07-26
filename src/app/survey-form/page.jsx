@@ -102,7 +102,7 @@ const EmployeeHappinessSurvey = () => {
             if (error.response && error.response.status === 400) {
                 toast({
                     title: "Survey Already Submitted",
-                    description: "You have already submitted a response for this Employee ID or Email address",
+                    description: "You have already submitted a response for this Email address",
                     status: "warning",
                     position: 'top-right',
                     duration: 3000,
