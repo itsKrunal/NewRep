@@ -197,7 +197,7 @@ const EmployeeHappinessSurvey = () => {
                                                 placeholder="Select your Department"
                                             >
                                                 {departments.map((dept) => (
-                                                    <option key={dept} value={dept}>
+                                                    <option key={dept} style={{color:"black"}} value={dept}>
                                                         {dept}
                                                     </option>
                                                 ))}
