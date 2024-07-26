@@ -1,8 +1,13 @@
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const surveySchema = new Schema(
   {
+    email : {
+      type : String,
+      required : true
+    },
     employeeId: {
       type: String,
       required: true,

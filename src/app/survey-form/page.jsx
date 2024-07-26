@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from 'react';
-import { Box, Button, Container, FormControl, FormLabel, Grid, Select, Text, useToast, Icon, Flex, Input } from '@chakra-ui/react';
+import { Box, Button, Container, FormControl, FormLabel, Grid, Select, Text, useToast, Icon, Flex, Input, Progress, background, Divider } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIcon
-import Image from 'next/image';
 import axios from 'axios';
-import surveySectionsArray from '../../Utils/surveySections.js'
+import surveySectionsArray from '../../Utils/surveySections.js';
+import './survey.css';
 
 const departments = [
     "Admin",
@@ -32,7 +32,6 @@ const departments = [
     "Support",
     "Tender"
 ];
-
 
 const surveySections = surveySectionsArray;
 
@@ -103,7 +102,7 @@ const EmployeeHappinessSurvey = () => {
             if (error.response && error.response.status === 400) {
                 toast({
                     title: "Survey Already Submitted",
-                    description: "You have already submitted a response for this Employee ID.",
+                    description: "You have already submitted a response for this Employee ID or Email address",
                     status: "warning",
                     position: 'top-right',
                     duration: 3000,
@@ -128,25 +127,27 @@ const EmployeeHappinessSurvey = () => {
 
     const isSectionComplete = () => {
         if (currentStep === 0) {
-            return department && /^\d{3,4}$/.test(ratings.employeeId) && ratings.employeeName?.trim().length > 0;
+            return department && /^\d{3,4}$/.test(ratings.employeeId) && ratings.employeeName?.trim().length > 0 && currentSection.fields.every(field => ratings[field.name] !== undefined);
         }
         return currentSection.fields.every(field => ratings[field.name] !== undefined);
     };
 
+    const progressValue = ((currentStep + 1) / surveySections.length) * 100;
+
     return (
+        <Box  height={'max-content'} p={5}>
         <Container
             maxW="container.lg"
             border="1px solid"
-            borderColor="whitesmoke"
-            boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)"
             borderRadius="md"
-            backgroundColor={'#DEECF6'}
+            backgroundColor={'gray.800'}
+            color={'white'}
+            height={'max-content'}
             mt={5}
             p={10}
             fontSize={'large'}
+            bg="gray.800"
             fontFamily={'Tahoma'}
-            borderBottom="10px solid gray"
-            borderTop="10px solid gray"
             overflowX="auto" // To handle horizontal overflow on smaller screens
         >
             <Box as="form" onSubmit={handleSubmit} height={'max-content'}>
@@ -158,7 +159,7 @@ const EmployeeHappinessSurvey = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <CheckCircleIcon boxSize="50px" color="#green" />
+                                <CheckCircleIcon boxSize="50px" color="green" />
                             </motion.div>
                             <Text fontSize='xl' fontWeight='bold' fontFamily={'Tahoma'} mt={4}>
                                 Thank you for your response! Your feedback has been submitted.
@@ -168,49 +169,28 @@ const EmployeeHappinessSurvey = () => {
                 ) : (
                     <>
                         <Flex
-                            bg="#DEECF6"
-                            p={4}
                             justifyContent={{ base: 'center', md: 'space-between' }} // Center on small screens, space-between on larger screens
                             alignItems="center"
-                            border={'5px solid gray'}
                             flexDirection={{ base: 'column', md: 'row' }} // Stack items vertically on smaller screens
                             textAlign={{ base: 'center', md: 'left' }} // Center text on smaller screens
+                            mt={6}
                         >
-                            <Text
-                                w={{ base: '100%', md: 'auto' }} // Full width on small screens
-                                fontSize={{ base: 'xl', md: 'xx-large' }} // Responsive font size
-                                fontWeight='bolder'
-                                bg="#DEECF6"
-                                color="black"
-                                fontFamily={'Tahoma'}
-                                mt={5}
-                                p={2}
-                            >
-                                {currentSection.title}
-                            </Text>
-                            <Box
-                                display={{ base: 'block', md: 'block' }} // Display image on all screens
-                                mt={{ base: 4, md: 0 }} // Margin top for small screens
-                                textAlign="center" // Center image on small screens
-                            >
-                                <Image
-                                    src="/desireLogo.png"
-                                    alt="Desire Logo"
-                                    layout="responsive"
-                                    width={320}
-                                    height={370}
-                                />
-                            </Box>
+                            <div className="three">
+                                <h1>{currentSection.title}</h1>
+                            </div>
                         </Flex>
-
-
+                        <Box mt={8}>
+                                <Progress value={progressValue} size="md" colorScheme="green" />
+                            </Box>
                         <Box mt={10}>
                             {currentStep === 0 && (
                                 <>
                                     <FormControl isRequired mt={4}>
                                         <FormLabel>Department</FormLabel>
                                         <Select
-                                            borderColor={'gray.400'}
+                                        bg="gray.700"
+                                        color="white"
+                                        _placeholder={{ color: 'gray.400' }}
                                             value={department}
                                             onChange={handleDepartmentChange}
                                             placeholder="Select your Department"
@@ -222,10 +202,12 @@ const EmployeeHappinessSurvey = () => {
                                             ))}
                                         </Select>
                                     </FormControl>
-                                    <FormControl isRequired>
+                                    <FormControl mt={2} isRequired>
                                         <FormLabel>Employee ID</FormLabel>
                                         <Input
-                                            borderColor={'gray.400'}
+                                        bg="gray.700"
+                                        color="white"
+                                        _placeholder={{ color: 'gray.400' }}
                                             value={ratings.employeeId || ''}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -245,7 +227,9 @@ const EmployeeHappinessSurvey = () => {
                                     <FormControl isRequired mt={4}>
                                         <FormLabel>Employee Name</FormLabel>
                                         <Input
-                                            borderColor={'gray.400'}
+                                        bg="gray.700"
+                                        color="white"
+                                        _placeholder={{ color: 'gray.400' }}
                                             type='text'
                                             value={ratings.employeeName || ''}
                                             onChange={(e) => {
@@ -258,7 +242,6 @@ const EmployeeHappinessSurvey = () => {
                                             placeholder="Enter your Employee Name"
                                         />
                                     </FormControl>
-
                                 </>
                             )}
                             {currentSection.fields.map((field, index) => (
@@ -277,9 +260,10 @@ const EmployeeHappinessSurvey = () => {
                                                 name={field.name}
                                                 value={option}
                                                 onClick={(e) => handleRatingChange(e, option)}
-                                                colorScheme='blue'
+                                                colorScheme='green'
                                                 color={ratings[field.name] === option ? 'white' : ''}
                                                 width="100%"
+                                                _hover={{background : 'green.600'}}
                                             >
                                                 {option}
                                             </Button>
@@ -295,7 +279,7 @@ const EmployeeHappinessSurvey = () => {
                                 )}
                                 <Button
                                     onClick={handleNext}
-                                    colorScheme='blue'
+                                    colorScheme='green'
                                     variant={'solid'}
                                     isLoading={loading}
                                     disabled={!isSectionComplete || (currentStep === 0 && !department)}
@@ -304,11 +288,17 @@ const EmployeeHappinessSurvey = () => {
                                     {currentStep < surveySections.length - 1 ? 'Next' : 'Submit'}
                                 </Button>
                             </Box>
+                            {/* <Box mt={4}>
+                                <Progress value={progressValue} size="md" colorScheme="green" />
+                            </Box> */}
                         </Box>
                     </>
                 )}
             </Box>
         </Container>
+
+
+        </Box>
     );
 };
 

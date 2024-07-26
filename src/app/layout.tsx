@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/provider";
+import Header from '../Components/Header';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +18,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{backgroundImage: "url(/blue.avif)"}}>
+      <body className={inter.className} style={{ position: 'relative', minHeight: '100vh' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: "#000000 url('/survey.jpg') no-repeat center center fixed",
+            backgroundSize: "cover",
+            zIndex: -1, // Make sure the overlay is behind the content
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 0, // Ensure this is above the background image
+            }}
+          />
+        </div>
         <Providers>
+          <Header />
           {children}
         </Providers>
       </body>

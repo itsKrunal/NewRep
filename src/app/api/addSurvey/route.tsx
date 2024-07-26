@@ -1,5 +1,7 @@
 import { connect } from "../../../dbConfig/dbConfig.js";
 import SurveyModel from "../../../models/survey.js";
+import jwt from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs'
 import { NextRequest, NextResponse } from "next/server.js";
 
 connect(); // Connect to MongoDB using your dbConfig
@@ -32,12 +34,25 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     console.log(data);
 
+
+    const token = request.cookies.get('token')?.value || '';
+    //@ts-ignore
+    const decodedToken = jwt.decode(token, 'PIKACHU');
+    //@ts-ignore
+    const email = decodedToken.user.email;
+
+
     if (!data.employeeId || !data.employeeName || !data.department) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Check if a survey response with the same employeeId already exists
-    const existingSurvey = await SurveyModel.findOne({ employeeId: data.employeeId });
+    const existingSurvey = await SurveyModel.findOne({
+      $or: [
+        { employeeId: data.employeeId },
+        { email: email } // Assuming the email field is stored in your SurveyModel
+      ]
+    });
     if (existingSurvey) {
       return NextResponse.json({ error: "Survey response already submitted for this Employee ID" }, { status: 400 });
     }
@@ -45,6 +60,7 @@ export async function POST(request: NextRequest) {
     // Create a new survey response document
     const newSurvey = new SurveyModel({
       employeeId: data.employeeId,
+      email,
       employeeName: data.employeeName,
       department: data.department,
       roleUnderstanding: getYesNoRating(data.roleUnderstanding),
