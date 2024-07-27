@@ -120,14 +120,20 @@ export default function Register() {
                     </InputGroup>
                     <Button colorScheme="green" onClick={handleLogin}>Login</Button>
                     <Flex alignItems="center" justifyContent="center">
-                        <Text textAlign="center" color="white">
+                        {!showForgotPassword && <>
+                          <Text textAlign="center" color="white">
                             Don't have an account?
                         </Text>
                         <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
                             Register
                         </Button>
+                        </>
+                        }
                         {showForgotPassword && (
                             <>
+                            <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
+                            Register Here
+                        </Button>
                                 <Button ml={2} colorScheme="green" variant="link" onClick={onOpen}>
                                     Forgot password?
                                 </Button>
