@@ -6,6 +6,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIco
 import axios from 'axios';
 import surveySectionsArray from '../../Utils/surveySections.js';
 import './survey.css';
+import { useRouter } from 'next/navigation.js';
 
 const departments = [
     "Admin",
@@ -41,6 +42,7 @@ const EmployeeHappinessSurvey = () => {
     const [ratings, setRatings] = useState({});
     const [currentStep, setCurrentStep] = useState(0);
     const [submitted, setSubmitted] = useState(false);
+    const [showAlreadySubmitted, setShowAlreadySubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleDepartmentChange = (event) => setDepartment(event.target.value);
@@ -61,6 +63,7 @@ const EmployeeHappinessSurvey = () => {
         try {
             await axios.get('/api/fetch-survey');
         } catch (error) {
+            setShowAlreadySubmitted(true);
             setSubmitted(true)
         }
     }
@@ -99,6 +102,9 @@ const EmployeeHappinessSurvey = () => {
                     duration: 3000,
                     isClosable: true,
                 });
+                setTimeout(()=> {
+                    logout()
+                }, [3000])
                 setSubmitted(true);
             } else {
                 toast({
@@ -136,6 +142,12 @@ const EmployeeHappinessSurvey = () => {
     };
 
     const currentSection = surveySections[currentStep];
+
+    const router = useRouter();
+    const logout = async () => {
+        await axios.get('/api/logout');
+        router.push('/login');
+    }
 
     const isSectionComplete = () => {
         if (currentStep === 0) {
@@ -175,7 +187,7 @@ const EmployeeHappinessSurvey = () => {
                                     <CheckCircleIcon boxSize="50px" color="green" />
                                 </motion.div>
                                 <Text fontSize='xl' fontWeight='bold' fontFamily={'Tahoma'} mt={4}>
-                                    Thank you for your response! Your feedback has been submitted.
+                                    {showAlreadySubmitted ? "Your response has been already submitted !": "Thank you for your response! Your feedback has been submitted."}
                                 </Text>
                             </Box>
                         </Box>

@@ -12,6 +12,7 @@ export default function Register() {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [emailForReset, setEmailForReset] = useState('');
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const toast = useToast();
     const { toggleColorMode } = useColorMode();
@@ -19,6 +20,7 @@ export default function Register() {
     
 
     const handleLogin = async () => {
+        setLoading(true)
         try {
             const info = await axios.post('/api/login', { mobileNumber, password });
             console.log(info)
@@ -54,6 +56,8 @@ export default function Register() {
                 duration: 3000,
                 isClosable: true,
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -118,7 +122,7 @@ export default function Register() {
                             />
                         </InputRightElement>
                     </InputGroup>
-                    <Button colorScheme="green" onClick={handleLogin}>Login</Button>
+                    <Button colorScheme="green" onClick={handleLogin} isLoading={loading}>Login</Button>
                     <Flex alignItems="center" justifyContent="center">
                         {!showForgotPassword && <>
                           <Text textAlign="center" color="white">
