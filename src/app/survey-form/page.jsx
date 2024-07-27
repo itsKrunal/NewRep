@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Container, FormControl, FormLabel, Grid, Select, Text, useToast, Icon, Flex, Input, Progress, background, Divider } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIcon
@@ -52,6 +52,18 @@ const EmployeeHappinessSurvey = () => {
             [name]: value
         });
     };
+
+    useEffect(()=> {
+        fetchSurvey();
+    }, [])
+
+    const fetchSurvey = async () => {
+        try {
+            await axios.get('/api/fetch-survey');
+        } catch (error) {
+            setSubmitted(true)
+        }
+    }
 
     const handleNext = () => {
         if (isSectionComplete()) {
