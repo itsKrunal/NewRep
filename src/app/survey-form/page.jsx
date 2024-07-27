@@ -65,6 +65,9 @@ const EmployeeHappinessSurvey = () => {
         } catch (error) {
             setShowAlreadySubmitted(true);
             setSubmitted(true)
+            setTimeout(()=> {
+                logout()
+            }, [3000])
         }
     }
 
