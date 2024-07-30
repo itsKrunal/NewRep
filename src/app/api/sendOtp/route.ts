@@ -31,6 +31,7 @@ const sendOTP = async (email: string, otp: string) => {
   };
 
   try {
+    console.log(mailOptions)
     await transporter.sendMail(mailOptions);
   } catch (error: any) {
     console.log(error.message);
@@ -48,6 +49,7 @@ export async function POST(request: NextRequest) {
     console.log(body)
     let salt = await bcrypt.genSalt(10);
     // let newPassword = await bcrypt.hash(password, salt);
+
 
     if (!forget) {
       const user = await UserSchema.findOne({ email: mobileNumber });
