@@ -2,6 +2,7 @@ import { connect } from "../../../dbConfig/dbConfig.js";
 import { NextRequest, NextResponse } from "next/server";
 import UserSchema from '../../../models/user.js'
 import bcrypt from 'bcryptjs'
+
 connect(); // Connect to MongoDB using your dbConfig
 
 export async function POST(request: NextRequest) {

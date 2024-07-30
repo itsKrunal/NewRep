@@ -1,21 +1,28 @@
 "use client"
-import { useState } from 'react';
-import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIcon
+
 
 export default function Register() {
     const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [otpLoading, setOtpLoading] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [isVerified, setIsVerified] = useState(false);
     const toast = useToast();
     const router = useRouter();
     const { toggleColorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleRegister = async () => {
+    const sendOtp = async () => {
+        setOtpLoading(true)
         try {
-            if(!mobileNumber.includes('desireenergy.com')) {
+            if (!mobileNumber.includes('desireenergy.com')) {
                 toast({
                     title: 'Please enter email with desire domain!',
                     status: 'info',
@@ -25,8 +32,47 @@ export default function Register() {
                 });
                 return;
             }
-                
-            const info = await axios.post('/api/register', { mobileNumber, password });
+            await axios.post('api/sendOtp', { mobileNumber, password });
+            onOpen(); // Open the modal after sending OTP
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: error.data.message,
+                status: 'error',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+        } finally {
+            setOtpLoading(false)
+        }
+    }
+
+    const handleRegister = async () => {
+        try {
+            if (!mobileNumber.includes('desireenergy.com')) {
+                toast({
+                    title: 'Please enter email with desire domain!',
+                    status: 'info',
+                    position: "top-right",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                return;
+            }
+
+            if (!isVerified) {
+                toast({
+                    title: 'Please verify your email!',
+                    status: 'info',
+                    position: "top-right",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                return;
+            }
+
+            const info = await axios.post('/api/register', { mobileNumber, password, });
             console.log(info);
             if (info.data.message === 'Registered successfully') {
                 toast({
@@ -36,6 +82,7 @@ export default function Register() {
                     duration: 3000,
                     isClosable: true,
                 });
+                onClose(); // Close the modal after successful registration
                 router.push('/login');
             } else {
                 toast({
@@ -57,6 +104,31 @@ export default function Register() {
         }
     };
 
+
+    const handleVerify = async () => {
+
+        try {
+            await axios.post('/api/verify', {otp, mobileNumber});
+            toast({
+                title: "Otp verified successfully!",
+                status: 'success',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+            onClose()
+            setIsVerified(true);
+        } catch (error) {
+            toast({
+                title: "Please enter correct OTP!",
+                status: 'error',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    }
+
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
@@ -72,11 +144,15 @@ export default function Register() {
                         onChange={(e) => setMobileNumber(e.target.value)}
                         type="email"
                         bg="gray.700"
+                        readOnly={isVerified}
                         color="white"
                         _placeholder={{ color: 'gray.400' }}
                     />
-                    <InputGroup>
-                        <Input
+                    {!isVerified  && mobileNumber.includes('desireenergy.com') && <Flex alignItems={'flex-end'} display={'flex'} justifyContent={'flex-end'}>
+                        <Button isLoading={otpLoading} size={'sm'} w={'20%'} onClick={sendOtp} isDisabled={!mobileNumber.includes('desireenergy.com')}>Send Otp</Button>
+                    </Flex>}
+                    {isVerified && <InputGroup>
+                         <Input
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -93,7 +169,8 @@ export default function Register() {
                                 color="gray.400"
                             />
                         </InputRightElement>
-                    </InputGroup>
+                    </InputGroup>}
+
                     <Button colorScheme="green" onClick={handleRegister}>Register</Button>
                     <Flex alignItems="center" justifyContent="center">
                         <Text textAlign="center" color="white">
@@ -105,6 +182,30 @@ export default function Register() {
                     </Flex>
                 </VStack>
             </Box>
+
+            {/* OTP Modal */}
+            <Modal isOpen={isOpen} bg="gray.800"  onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent bg="gray.800" color={'white'}>
+                    <ModalHeader>Enter OTP</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody bg="gray.800">
+                        <Input
+                            variant="ghost"
+                            bg="gray.700"
+                            onChange={(e) => { setOtp(e.target.value) }}
+                            placeholder='Enter Otp Sent To Your Email!'
+                        />
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                        <Button colorScheme="green" onClick={handleVerify}>Verify</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Box>
     );
 }

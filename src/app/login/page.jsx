@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/navigation';
@@ -12,12 +12,47 @@ export default function Register() {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [emailForReset, setEmailForReset] = useState('');
+    const [otp, setOtp] = useState('');
+    const [verified, setIsVerified] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const toast = useToast();
     const { toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    
+    const [otpLoading, setOtpLoading] = useState(false);
+
+    useEffect(()=> {
+        if(otp.length == 6)
+                handleVerify()
+    }, [otp])
+
+    const sendOtp = async () => {
+        setOtpLoading(true)
+        try {
+            await axios.post('api/sendOtp', { mobileNumber, forget : true });
+            onOpen(); // Open the modal after sending OTP
+            toast({
+                title: 'Otp has been sent to your registered mail!',
+                status: 'info',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: error.data.message,
+                status: 'error',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+        } finally {
+            setOtpLoading(false)
+        }
+    }
+
+
 
     const handleLogin = async () => {
         setLoading(true)
@@ -62,6 +97,17 @@ export default function Register() {
     };
 
     const handleResetPassword = async () => {
+        if (!verified) {
+            toast({
+                title: 'Please verify your email!',
+                status: 'info',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+
         try {
             await axios.post('/api/reset-password', { email: emailForReset, password: newPassword });
             toast({
@@ -88,6 +134,30 @@ export default function Register() {
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
+
+    const handleVerify = async () => {
+        try {
+            await axios.post('/api/verify', {otp, mobileNumber});
+            toast({
+                title: "Otp verified successfully!",
+                status: 'success',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+            setIsVerified(true);
+        } catch (error) {
+            toast({
+                title: "Please enter correct OTP!",
+                status: 'error',
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    }
+
+
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
@@ -125,19 +195,19 @@ export default function Register() {
                     <Button colorScheme="green" onClick={handleLogin} isLoading={loading}>Login</Button>
                     <Flex alignItems="center" justifyContent="center">
                         {!showForgotPassword && <>
-                          <Text textAlign="center" color="white">
-                            Don't have an account?
-                        </Text>
-                        <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
-                            Register
-                        </Button>
+                            <Text textAlign="center" color="white">
+                                Don't have an account?
+                            </Text>
+                            <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
+                                Register
+                            </Button>
                         </>
                         }
                         {showForgotPassword && (
                             <>
-                            <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
-                            Register Here
-                        </Button>
+                                <Button ml={2} colorScheme="green" variant="link" onClick={() => router.push('/register')}>
+                                    Register Here
+                                </Button>
                                 <Button ml={2} colorScheme="green" variant="link" onClick={onOpen}>
                                     Forgot password?
                                 </Button>
@@ -154,15 +224,27 @@ export default function Register() {
                                                 color="white"
                                                 mb={4}
                                             />
-                                            <Input
+                                             <Input
+                                                placeholder="OTP"
+                                                value={otp}
+                                                onChange={(e) => setOtp(e.target.value)}
+                                                bg="gray.700"
+                                                color="white"
+                                                _placeholder={{ color: 'gray.400' }}
+                                            />
+                                            {verified && <Input
                                                 placeholder="New Password"
+                                                mt={2}
                                                 value={newPassword}
                                                 onChange={(e) => setNewPassword(e.target.value)}
                                                 type="password"
                                                 bg="gray.700"
                                                 color="white"
                                                 _placeholder={{ color: 'gray.400' }}
-                                            />
+                                            />}
+                                        {!verified &&  <Flex mt={3} alignItems={'flex-end'} display={'flex'} justifyContent={'flex-end'}>
+                                            <Button colorScheme='blue' isLoading={otpLoading} size={'sm'} w={'20%'} onClick={sendOtp} isDisabled={!mobileNumber.includes('desireenergy.com')}>Send Otp</Button>
+                                        </Flex>}
                                         </ModalBody>
                                         <ModalFooter>
                                             <Button colorScheme="green" onClick={handleResetPassword}>

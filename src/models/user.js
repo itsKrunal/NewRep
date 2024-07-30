@@ -15,6 +15,11 @@ const userSchema = new Schema(
         type : String,
         required : true
     },
+    role: {
+      type: String,
+      enum: ['Operator', 'Admin'],
+      default : 'Operator'
+    }
   },
   {
     collection: 'userDesire', // Set your desired collection name
