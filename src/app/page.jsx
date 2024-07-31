@@ -1,19 +1,10 @@
 "use client";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import * as XLSX from "xlsx";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Heading,
-  useToast,
   VStack,
   IconButton,
   Drawer,
@@ -27,7 +18,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuGroup,
   Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
@@ -88,12 +78,21 @@ const Page = () => {
         </DrawerContent>
       </Drawer>
       <VStack spacing={4} align="stretch" mt={4}>
-        <Heading as="h1" size="lg" textAlign="center">Welcome to the Analytics Dashboard</Heading>
+        <Heading as="h1" size="lg" color={'black'} textAlign="center">Welcome to the Analytics Dashboard</Heading>
         <Box p={4} bg="gray.100" borderRadius="md" boxShadow="md">
           <Text fontSize="lg" mb={2}><strong>Overview</strong></Text>
           <Text fontSize="md">
             Welcome to your comprehensive analytics dashboard! This platform is designed to provide key insights and actionable data for our PPC (Production Planning and Control) and Finance departments, as well as facilitate employee engagement through survey forms. Navigate through the sections to find detailed reports and tools that will help you make informed decisions and improve overall efficiency.
           </Text>
+        </Box>
+        <Box p={4} bg="yellow.100" borderRadius="md" boxShadow="md">
+          <Text fontSize="lg" mb={2}><strong>Notification</strong></Text>
+          <Text fontSize="md" mb={2}>
+            We kindly request all employees to complete the survey form for the month of July. Your feedback is invaluable in helping us improve and create a better workplace environment for everyone.
+          </Text>
+          <Button colorScheme="teal" onClick={() => { router.push('/survey-form') }}>
+            Go to Survey Form
+          </Button>
         </Box>
       </VStack>
     </Box>
