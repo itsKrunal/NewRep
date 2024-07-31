@@ -6,11 +6,25 @@ export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
     const isPublic = path === '/login' || path == '/register';
     const token = request.cookies.get('token')?.value || '';
+    
+    console.log("INININ")
+    if (!isPublic) {
+        //@ts-ignore
+        if (!token || isTokenExpired(token)) {
+            console.log("FAILED: No token or token expired");
+            return NextResponse.redirect(new URL('/login', request.nextUrl));
+        }
+        
+        const isAdminPath = path == '/reports/survey-report';
+        console.log("THIS IS MY PATH", path, isAdminPath);
+        //@ts-ignore
+        const decodedToken = jwt.decode(token, 'PIKACHU');
+        if (isAdminPath && (!decodedToken || !decodedToken.user.role || decodedToken.user.role !== 'Admin')) {
+            return NextResponse.redirect(new URL('/login', request.nextUrl));
+         }
 
-    if (!isPublic && (!token || isTokenExpired(token, path))) {
-        // Redirect to login if the route is not public and token is missing or expired
-        console.log("FAILED");
-        return NextResponse.redirect(new URL('/login', request.nextUrl));
+        //     console.log("FAILED: No role or role is not admin");
+        // }
     }
 }
 
@@ -27,5 +41,5 @@ const isTokenExpired = (token: any, path: any) => {
 };
 
 export const config = {
-    matcher: ['/', '/survey-form'],
+    matcher: ['/', '/survey-form', '/reports/:path*'],
 };

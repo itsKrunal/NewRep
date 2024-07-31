@@ -1,8 +1,11 @@
+"use client"
 import { Box, Flex, Heading, Image, IconButton } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const Header = () => {
 
+    const router = useRouter();
     return (
         <Box
             as="header"
@@ -24,6 +27,7 @@ const Header = () => {
                     <Image
                         src="/desireLogo.png"
                         alt="Desire Logo"
+                        onClick={()=> {router.push('/')}}
                         width={300}
                         height={100}
                         objectFit="contain"
