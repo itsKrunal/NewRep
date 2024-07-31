@@ -76,16 +76,16 @@ const Page = () => {
               <MenuList>
                 <MenuItem>PPC</MenuItem>
                 <MenuItem>Finance</MenuItem>
-                <MenuItem onClick={()=> {router.push('/reports/survey-report')}}>Survey</MenuItem>
+                <MenuItem onClick={() => { router.push('/reports/survey-report') }}>Survey</MenuItem>
               </MenuList>
             </Menu>
-            <Button variant="solid" onClick={()=> {router.push('/survey-form')}} mt={4}>
+            <Button variant="solid" onClick={() => { router.push('/survey-form') }} mt={4}>
               Survey Form
             </Button>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-          </Box>
+    </Box>
   );
 };
 

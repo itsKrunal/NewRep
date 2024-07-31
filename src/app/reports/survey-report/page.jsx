@@ -92,7 +92,7 @@ const Page = () => {
               </MenuButton>
               <MenuList>
                 <MenuItem>Admin</MenuItem>
-                <MenuItem>PPC Users</MenuItem>
+                <MenuItem onClick={()=> {router.push('/users/ppc')}}>PPC Users</MenuItem>
                 <MenuItem>Finance Users</MenuItem>
                 <MenuItem>Default</MenuItem>
               </MenuList>
@@ -107,7 +107,7 @@ const Page = () => {
                 <MenuItem>Survey</MenuItem>
               </MenuList>
             </Menu>
-            <Button variant="solid" mt={4}>
+            <Button variant="solid" onClick={()=> router.push('/survey-form')} mt={4}>
               Survey Form
             </Button>
           </DrawerBody>
@@ -118,32 +118,32 @@ const Page = () => {
           Survey Data
         </Heading>
         <Box overflowX="auto">
-          <Table variant="striped" size="sm">
+          <Table variant="striped"  size="sm">
             <Thead>
               <Tr>
                 <Th>MMYYYY</Th>
                 <Th>Email</Th>
-                <Th>Camaraderie Enjoy Colleagues</Th>
-                <Th>Camaraderie Good Working Relationship</Th>
-                <Th>Camaraderie Sense Of Camaraderie</Th>
-                <Th>Camaraderie Team Support</Th>
                 <Th>Department</Th>
-                <Th>Fairness Fair Workload</Th>
-                <Th>Fairness Merit Based Promotions</Th>
-                <Th>Fairness Rewarded For Performance</Th>
-                <Th>Fairness Treated With Respect</Th>
-                <Th>Pride Positive Impact</Th>
-                <Th>Pride Pride In Quality</Th>
-                <Th>Pride Proud Of Work</Th>
-                <Th>Pride Proud To Tell</Th>
-                <Th>Respect Resources Support</Th>
-                <Th>Respect Share Ideas</Th>
-                <Th>Respect Use Skills</Th>
-                <Th>Respect Valued Employee</Th>
                 <Th>Trust Fair Treatment</Th>
                 <Th>Trust Leadership Confidence</Th>
                 <Th>Trust Management Communication</Th>
                 <Th>Trust Role Understanding</Th>
+                <Th>Respect Resources Support</Th>
+                <Th>Respect Share Ideas</Th>
+                <Th>Respect Use Skills</Th>
+                <Th>Respect Valued Employee</Th>
+                <Th>Fairness Fair Workload</Th>
+                <Th>Fairness Merit Based Promotions</Th>
+                <Th>Fairness Rewarded For Performance</Th>
+                <Th>Fairness Treated With Respect</Th>
+                <Th>Camaraderie Enjoy Colleagues</Th>
+                <Th>Camaraderie Good Working Relationship</Th>
+                <Th>Camaraderie Sense Of Camaraderie</Th>
+                <Th>Camaraderie Team Support</Th>
+                <Th>Pride Positive Impact</Th>
+                <Th>Pride Pride In Quality</Th>
+                <Th>Pride Proud Of Work</Th>
+                <Th>Pride Proud To Tell</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -151,27 +151,27 @@ const Page = () => {
                 <Tr key={survey._id}>
                   <Td>{survey.MMYYYY}</Td>
                   <Td>{survey.email}</Td>
-                  <Td>{survey.camaraderieEnjoyColleagues}</Td>
-                  <Td>{survey.camaraderieGoodWorkingRelationship}</Td>
-                  <Td>{survey.camaraderieSenseOfCamaraderie}</Td>
-                  <Td>{survey.camaraderieTeamSupport}</Td>
                   <Td>{survey.department}</Td>
-                  <Td>{survey.fairnessFairWorkload}</Td>
-                  <Td>{survey.fairnessMeritBasedPromotions}</Td>
-                  <Td>{survey.fairnessRewardedForPerformance}</Td>
-                  <Td>{survey.fairnessTreatedWithRespect}</Td>
-                  <Td>{survey.pridePositiveImpact}</Td>
-                  <Td>{survey.pridePrideInQuality}</Td>
-                  <Td>{survey.prideProudOfWork}</Td>
-                  <Td>{survey.prideProudToTell}</Td>
-                  <Td>{survey.respectResourcesSupport}</Td>
-                  <Td>{survey.respectShareIdeas}</Td>
-                  <Td>{survey.respectUseSkills}</Td>
-                  <Td>{survey.respectValuedEmployee}</Td>
                   <Td>{survey.trustFairTreatment}</Td>
                   <Td>{survey.trustLeadershipConfidence}</Td>
                   <Td>{survey.trustManagementCommunication}</Td>
                   <Td>{survey.trustRoleUnderstanding}</Td>
+                  <Td>{survey.respectResourcesSupport}</Td>
+                  <Td>{survey.respectShareIdeas}</Td>
+                  <Td>{survey.respectUseSkills}</Td>
+                  <Td>{survey.respectValuedEmployee}</Td>
+                  <Td>{survey.fairnessFairWorkload}</Td>
+                  <Td>{survey.fairnessMeritBasedPromotions}</Td>
+                  <Td>{survey.fairnessRewardedForPerformance}</Td>
+                  <Td>{survey.fairnessTreatedWithRespect}</Td>
+                  <Td>{survey.camaraderieEnjoyColleagues}</Td>
+                  <Td>{survey.camaraderieGoodWorkingRelationship}</Td>
+                  <Td>{survey.camaraderieSenseOfCamaraderie}</Td>
+                  <Td>{survey.camaraderieTeamSupport}</Td>
+                  <Td>{survey.pridePositiveImpact}</Td>
+                  <Td>{survey.pridePrideInQuality}</Td>
+                  <Td>{survey.prideProudOfWork}</Td>
+                  <Td>{survey.prideProudToTell}</Td>
                 </Tr>
               ))}
             </Tbody>

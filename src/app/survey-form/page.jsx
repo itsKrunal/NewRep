@@ -148,8 +148,7 @@ const EmployeeHappinessSurvey = () => {
 
     const router = useRouter();
     const logout = async () => {
-        await axios.get('/api/logout');
-        router.push('/login');
+        router.push('/');
     }
 
     const isSectionComplete = () => {
