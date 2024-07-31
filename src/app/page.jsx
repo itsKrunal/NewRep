@@ -28,12 +28,14 @@ import {
   MenuList,
   MenuItem,
   MenuGroup,
+  Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 
 const Page = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box p={4} bg={"white"} height={'100vh'}>
       <IconButton
@@ -85,6 +87,15 @@ const Page = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+      <VStack spacing={4} align="stretch" mt={4}>
+        <Heading as="h1" size="lg" textAlign="center">Welcome to the Analytics Dashboard</Heading>
+        <Box p={4} bg="gray.100" borderRadius="md" boxShadow="md">
+          <Text fontSize="lg" mb={2}><strong>Overview</strong></Text>
+          <Text fontSize="md">
+            Welcome to your comprehensive analytics dashboard! This platform is designed to provide key insights and actionable data for our PPC (Production Planning and Control) and Finance departments, as well as facilitate employee engagement through survey forms. Navigate through the sections to find detailed reports and tools that will help you make informed decisions and improve overall efficiency.
+          </Text>
+        </Box>
+      </VStack>
     </Box>
   );
 };
