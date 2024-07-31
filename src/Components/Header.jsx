@@ -46,12 +46,12 @@ const Header = () => {
                         alt="Desire Logo"
                         onClick={() => { router.push('/') }}
                         width={'36%'}
-                        height={'40%'}
+                        height={'45%'}
                         objectFit="contain"
                         mr={2}
                     />
                 </Box>
-                <Box display={'flex'} alignItems={'center'} gap={'10px'} onClick={()=> getInfo()}>
+                <Box display={'flex'} alignItems={'center'} height={'30%'} gap={'10px'} onClick={()=> getInfo()}>
                     <Menu>
                         <MenuButton as={Button} p={0} borderRadius={'100%'} cursor="pointer">
                             <Avatar icon={<Icon as={MdAccountCircle} w={6} h={6} />} />
