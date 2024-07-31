@@ -113,7 +113,7 @@ const Page = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align="stretch" height={'100vh'}>
         <Heading as="h1" size="lg" textAlign="center">
           Survey Data
         </Heading>
@@ -177,7 +177,7 @@ const Page = () => {
             </Tbody>
           </Table>
         </Box>
-        <Button w={"10%"} mt={5} colorScheme="teal" onClick={handleExport} mb={4}>
+        <Button w={'max-content'} mt={5} colorScheme="teal" onClick={handleExport} mb={4}>
           Export to Excel
         </Button>
       </VStack>
