@@ -4,7 +4,7 @@ import { Box, Button, Container, FormControl, FormLabel, Grid, Select, Text, use
 import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIcon
 import axios from 'axios';
-import surveySectionsArray from '../../Utils/surveySections.js';
+import surveySectionsArray from '../../../Utils/surveySections';
 import './survey.css';
 import { useRouter } from 'next/navigation.js';
 
@@ -162,7 +162,7 @@ const EmployeeHappinessSurvey = () => {
     const progressValue = ((currentStep + 1) / surveySections.length) * 100;
 
     return (
-        <Box height={'max-content'} p={5}>
+        <Box height={'max-content'} mt={10} p={5}>
             <Container
                 maxW="container.lg"
                 border="1px solid"
@@ -291,6 +291,7 @@ const EmployeeHappinessSurvey = () => {
                                                     color={ratings[field.name] === option ? 'white' : ''}
                                                     width="100%"
                                                     _hover={{ background: 'green.600' }}
+                                                    borderRadius="0"
                                                 >
                                                     {option}
                                                 </Button>
@@ -306,6 +307,7 @@ const EmployeeHappinessSurvey = () => {
                                     )}
                                     <Button
                                         onClick={handleNext}
+                                        borderRadius="0"
                                         colorScheme='green'
                                         variant={'solid'}
                                         isLoading={loading}

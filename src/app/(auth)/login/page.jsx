@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from 'react';
 import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
@@ -17,19 +17,17 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const toast = useToast();
-    const { toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [otpLoading, setOtpLoading] = useState(false);
 
-    useEffect(()=> {
-        if(otp.length == 6)
-                handleVerify()
-    }, [otp])
+    useEffect(() => {
+        if (otp.length === 6) handleVerify();
+    }, [otp]);
 
     const sendOtp = async () => {
-        setOtpLoading(true)
+        setOtpLoading(true);
         try {
-            await axios.post('api/sendOtp', { mobileNumber, forget : true });
+            await axios.post('api/sendOtp', { mobileNumber, forget: true });
             onOpen(); // Open the modal after sending OTP
             toast({
                 title: 'Otp has been sent to your registered mail!',
@@ -39,7 +37,7 @@ export default function Register() {
                 isClosable: true,
             });
         } catch (error) {
-            console.log(error)
+            console.log(error);
             toast({
                 title: error.data.message,
                 status: 'error',
@@ -48,17 +46,15 @@ export default function Register() {
                 isClosable: true,
             });
         } finally {
-            setOtpLoading(false)
+            setOtpLoading(false);
         }
-    }
+    };
 
-
-
-    const handleLogin = async () => {
-        setLoading(true)
+    const handleLogin = async (e) => {
+        setLoading(true);
         try {
             const info = await axios.post('/api/login', { mobileNumber, password });
-            console.log(info)
+            console.log(info);
             if (info.data.message === 'Logged in successfully') {
                 toast({
                     title: 'Logged In Successfully',
@@ -83,7 +79,7 @@ export default function Register() {
                 });
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
             toast({
                 title: error.message,
                 status: 'error',
@@ -118,7 +114,7 @@ export default function Register() {
                 isClosable: true,
             });
             onClose();
-            setShowForgotPassword(false)
+            setShowForgotPassword(false);
         } catch (error) {
             console.log(error);
             toast({
@@ -137,7 +133,7 @@ export default function Register() {
 
     const handleVerify = async () => {
         try {
-            await axios.post('/api/verify', {otp, mobileNumber});
+            await axios.post('/api/verify', { otp, mobileNumber });
             toast({
                 title: "Otp verified successfully!",
                 status: 'success',
@@ -155,9 +151,7 @@ export default function Register() {
                 isClosable: true,
             });
         }
-    }
-
-
+    };
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
@@ -192,7 +186,7 @@ export default function Register() {
                             />
                         </InputRightElement>
                     </InputGroup>
-                    <Button colorScheme="green" onClick={handleLogin} isLoading={loading}>Login</Button>
+                    <Button type="button" colorScheme="green" onClick={handleLogin} isLoading={loading}>Login</Button>
                     <Flex alignItems="center" justifyContent="center">
                         {!showForgotPassword && <>
                             <Text textAlign="center" color="white">
@@ -243,14 +237,14 @@ export default function Register() {
                                                 _placeholder={{ color: 'gray.400' }}
                                             />}
                                         {!verified &&  <Flex mt={3} alignItems={'flex-end'} display={'flex'} justifyContent={'flex-end'}>
-                                            <Button colorScheme='blue' isLoading={otpLoading} size={'sm'} w={'20%'} onClick={sendOtp} isDisabled={!mobileNumber.includes('desireenergy.com')}>Send Otp</Button>
+                                            <Button type="button" colorScheme='blue' isLoading={otpLoading} size={'sm'} w={'20%'} onClick={sendOtp} isDisabled={!mobileNumber.includes('desireenergy.com')}>Send Otp</Button>
                                         </Flex>}
                                         </ModalBody>
                                         <ModalFooter>
-                                            <Button colorScheme="green" onClick={handleResetPassword}>
+                                            <Button type="button" colorScheme="green" onClick={handleResetPassword}>
                                                 Reset Password
                                             </Button>
-                                            <Button ml={3} onClick={onClose}>
+                                            <Button type="button" ml={3} onClick={onClose}>
                                                 Cancel
                                             </Button>
                                         </ModalFooter>
