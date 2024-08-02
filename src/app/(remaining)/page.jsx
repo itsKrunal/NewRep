@@ -18,7 +18,7 @@ const Page = () => {
   const router = useRouter();
 
   return (
-    <Box p={4} bg={"green.50"} height={'100vh'}>
+    <Box p={4} bg={"green.50"} height={'100vh'} w={'100%'}>
       <VStack spacing={6} align="stretch" mt={'3.5em'}>
         <Card boxShadow={'lg'}>
           <CardHeader>
