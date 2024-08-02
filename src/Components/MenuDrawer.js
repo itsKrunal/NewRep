@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { FaProjectDiagram, FaUsers, FaFileAlt, FaWpforms, FaUserPlus, FaUserEdit, FaChartBar, FaDollarSign } from 'react-icons/fa';
+import { AiOutlineMenu } from "react-icons/ai";
 
 const MenuDrawer = () => {
     const router = useRouter();
@@ -32,16 +33,14 @@ const MenuDrawer = () => {
     return (
         <Box position="relative" zIndex="overlay" backgroundColor={'green.100'}>
             <IconButton
-                icon={<HamburgerIcon />}
+                icon={<AiOutlineMenu />}
                 onClick={onOpen}
                 aria-label="Menu"
-                border={'1px solid black'}
                 mb={4}
                 position="absolute"
                 top={4}
                 left={4}
                 size="lg"
-                variant="outline"
                 colorScheme="green"
             />
             <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -81,7 +80,7 @@ const MenuDrawer = () => {
                                 <MenuList>
                                     <MenuItem icon={<FaChartBar />}>PPC</MenuItem>
                                     <MenuItem icon={<FaDollarSign />}>Finance</MenuItem>
-                                    <MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report') }}>Survey</MenuItem>
+                                    <MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Survey</MenuItem>
                                 </MenuList>
                             </Menu>
                             <Divider/>
@@ -90,7 +89,7 @@ const MenuDrawer = () => {
                                 justifyContent="space-between"
                                 variant={'outline'}
                                 colorScheme="green"
-                                onClick={() => { router.push('/survey-form') }}
+                                onClick={() => { router.push('/survey-form'); onClose() }}
                             >
                                 <HStack spacing={2} align="center">
                                     <FaWpforms />

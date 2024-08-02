@@ -16,20 +16,13 @@ import {
   useToast,
   VStack,
   IconButton,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
   useDisclosure,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuGroup,
+  CardHeader,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
-import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, } from "@chakra-ui/icons";
+import CustomHeading from "@/StyleComponents/PageHeader";
 
 const Page = () => {
   const [surveys, setSurveys] = useState([]);
@@ -63,125 +56,83 @@ const Page = () => {
   };
 
   return (
-    <Box p={4} bg={"white"}>
-      <IconButton
-        icon={<HamburgerIcon />}
-        onClick={onOpen}
-        aria-label="Menu"
-        mb={4}
-      />
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
-          <DrawerBody display={'flex'} flexDir={'column'}>
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                Project
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Project Status</MenuItem>
-                <MenuItem>Progress Status</MenuItem>
-                <MenuItem>Remarks</MenuItem>
-              </MenuList>
-            </Menu>
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} mt={4}>
-                Users
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Admin</MenuItem>
-                <MenuItem onClick={()=> {router.push('/users/ppc')}}>PPC Users</MenuItem>
-                <MenuItem>Finance Users</MenuItem>
-                <MenuItem>Default</MenuItem>
-              </MenuList>
-            </Menu>
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} mt={4}>
-                Reports
-              </MenuButton>
-              <MenuList>
-                <MenuItem>PPC</MenuItem>
-                <MenuItem>Finance</MenuItem>
-                <MenuItem>Survey</MenuItem>
-              </MenuList>
-            </Menu>
-            <Button variant="solid" onClick={()=> router.push('/survey-form')} mt={4}>
-              Survey Form
-            </Button>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-      <VStack spacing={4} align="stretch" height={'100vh'}>
-        <Heading as="h1" size="lg" textAlign="center">
-          Survey Data
-        </Heading>
-        <Box overflowX="auto">
-          <Table variant="striped"  size="sm">
-            <Thead>
-              <Tr>
-                <Th>MMYYYY</Th>
-                <Th>Email</Th>
-                <Th>Department</Th>
-                <Th>Trust Fair Treatment</Th>
-                <Th>Trust Leadership Confidence</Th>
-                <Th>Trust Management Communication</Th>
-                <Th>Trust Role Understanding</Th>
-                <Th>Respect Resources Support</Th>
-                <Th>Respect Share Ideas</Th>
-                <Th>Respect Use Skills</Th>
-                <Th>Respect Valued Employee</Th>
-                <Th>Fairness Fair Workload</Th>
-                <Th>Fairness Merit Based Promotions</Th>
-                <Th>Fairness Rewarded For Performance</Th>
-                <Th>Fairness Treated With Respect</Th>
-                <Th>Camaraderie Enjoy Colleagues</Th>
-                <Th>Camaraderie Good Working Relationship</Th>
-                <Th>Camaraderie Sense Of Camaraderie</Th>
-                <Th>Camaraderie Team Support</Th>
-                <Th>Pride Positive Impact</Th>
-                <Th>Pride Pride In Quality</Th>
-                <Th>Pride Proud Of Work</Th>
-                <Th>Pride Proud To Tell</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {surveys.map((survey) => (
-                <Tr key={survey._id}>
-                  <Td>{survey.MMYYYY}</Td>
-                  <Td>{survey.email}</Td>
-                  <Td>{survey.department}</Td>
-                  <Td>{survey.trustFairTreatment}</Td>
-                  <Td>{survey.trustLeadershipConfidence}</Td>
-                  <Td>{survey.trustManagementCommunication}</Td>
-                  <Td>{survey.trustRoleUnderstanding}</Td>
-                  <Td>{survey.respectResourcesSupport}</Td>
-                  <Td>{survey.respectShareIdeas}</Td>
-                  <Td>{survey.respectUseSkills}</Td>
-                  <Td>{survey.respectValuedEmployee}</Td>
-                  <Td>{survey.fairnessFairWorkload}</Td>
-                  <Td>{survey.fairnessMeritBasedPromotions}</Td>
-                  <Td>{survey.fairnessRewardedForPerformance}</Td>
-                  <Td>{survey.fairnessTreatedWithRespect}</Td>
-                  <Td>{survey.camaraderieEnjoyColleagues}</Td>
-                  <Td>{survey.camaraderieGoodWorkingRelationship}</Td>
-                  <Td>{survey.camaraderieSenseOfCamaraderie}</Td>
-                  <Td>{survey.camaraderieTeamSupport}</Td>
-                  <Td>{survey.pridePositiveImpact}</Td>
-                  <Td>{survey.pridePrideInQuality}</Td>
-                  <Td>{survey.prideProudOfWork}</Td>
-                  <Td>{survey.prideProudToTell}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
-        <Button w={'max-content'} mt={5} colorScheme="teal" onClick={handleExport} mb={4}>
-          Export to Excel
-        </Button>
+    <Box p={4} bg={"green.50"} height={'100vh'}>
+      <VStack spacing={6} align="stretch" mt={'3.5em'}>
+        <Card boxShadow={'lg'}>
+          <CardHeader>
+            <CustomHeading prop={'Survey Report'} />
+          </CardHeader>
+          <CardBody>
+            <Card boxShadow={'0px 4px 6px rgba(0, 0, 0.2, 0.3)'} p={3}>
+                <Box overflowX="auto">
+                  <Table variant="striped" size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th>MMYYYY</Th>
+                        <Th>Email</Th>
+                        <Th>Department</Th>
+                        <Th>Trust Fair Treatment</Th>
+                        <Th>Trust Leadership Confidence</Th>
+                        <Th>Trust Management Communication</Th>
+                        <Th>Trust Role Understanding</Th>
+                        <Th>Respect Resources Support</Th>
+                        <Th>Respect Share Ideas</Th>
+                        <Th>Respect Use Skills</Th>
+                        <Th>Respect Valued Employee</Th>
+                        <Th>Fairness Fair Workload</Th>
+                        <Th>Fairness Merit Based Promotions</Th>
+                        <Th>Fairness Rewarded For Performance</Th>
+                        <Th>Fairness Treated With Respect</Th>
+                        <Th>Camaraderie Enjoy Colleagues</Th>
+                        <Th>Camaraderie Good Working Relationship</Th>
+                        <Th>Camaraderie Sense Of Camaraderie</Th>
+                        <Th>Camaraderie Team Support</Th>
+                        <Th>Pride Positive Impact</Th>
+                        <Th>Pride Pride In Quality</Th>
+                        <Th>Pride Proud Of Work</Th>
+                        <Th>Pride Proud To Tell</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {surveys.map((survey) => (
+                        <Tr key={survey._id}>
+                          <Td>{survey.MMYYYY}</Td>
+                          <Td>{survey.email}</Td>
+                          <Td>{survey.department}</Td>
+                          <Td>{survey.trustFairTreatment}</Td>
+                          <Td>{survey.trustLeadershipConfidence}</Td>
+                          <Td>{survey.trustManagementCommunication}</Td>
+                          <Td>{survey.trustRoleUnderstanding}</Td>
+                          <Td>{survey.respectResourcesSupport}</Td>
+                          <Td>{survey.respectShareIdeas}</Td>
+                          <Td>{survey.respectUseSkills}</Td>
+                          <Td>{survey.respectValuedEmployee}</Td>
+                          <Td>{survey.fairnessFairWorkload}</Td>
+                          <Td>{survey.fairnessMeritBasedPromotions}</Td>
+                          <Td>{survey.fairnessRewardedForPerformance}</Td>
+                          <Td>{survey.fairnessTreatedWithRespect}</Td>
+                          <Td>{survey.camaraderieEnjoyColleagues}</Td>
+                          <Td>{survey.camaraderieGoodWorkingRelationship}</Td>
+                          <Td>{survey.camaraderieSenseOfCamaraderie}</Td>
+                          <Td>{survey.camaraderieTeamSupport}</Td>
+                          <Td>{survey.pridePositiveImpact}</Td>
+                          <Td>{survey.pridePrideInQuality}</Td>
+                          <Td>{survey.prideProudOfWork}</Td>
+                          <Td>{survey.prideProudToTell}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </Box>
+                <Button w={'max-content'} mt={5} colorScheme="green" onClick={handleExport}>
+                  Export to Excel
+                </Button>
+            </Card>
+          </CardBody>
+        </Card>
       </VStack>
     </Box>
+
   );
 };
 

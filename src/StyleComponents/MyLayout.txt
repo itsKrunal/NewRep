@@ -1,0 +1,36 @@
+"use client";
+import { useRouter } from "next/navigation";
+import React from "react";
+import {
+  Box,
+  Button,
+  Heading,
+  VStack,
+  Text,
+  Card,
+  CardHeader,
+  CardBody,
+  Divider,
+} from "@chakra-ui/react";
+import CustomHeading from '../../StyleComponents/PageHeader';
+
+const Page = () => {
+
+  return (
+    <Box p={4} bg={"green.50"} height={'100vh'}>
+      <VStack spacing={6} align="stretch" mt={'3.5em'}>
+        <Card boxShadow={'lg'}>
+          <CardHeader>
+            <CustomHeading prop={} />
+          </CardHeader>
+          <CardBody>
+            <Card boxShadow={'0px 4px 6px rgba(0, 0, 0.2, 0.3)'} p={3}>
+            </Card>
+          </CardBody>
+        </Card>
+      </VStack>
+    </Box>
+  );
+};
+
+export default Page;

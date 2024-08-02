@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Divider, Image } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -108,7 +108,7 @@ export default function Register() {
     const handleVerify = async () => {
 
         try {
-            await axios.post('/api/verify', {otp, mobileNumber});
+            await axios.post('/api/verify', { otp, mobileNumber });
             toast({
                 title: "Otp verified successfully!",
                 status: 'success',
@@ -137,6 +137,19 @@ export default function Register() {
         <Box display="flex" alignItems="center" justifyContent="center" height="90vh">
             <Box bg="gray.800" p={8} borderRadius="md" boxShadow="md" width={['90%', '80%', '60%', '40%']} maxWidth="500px" height={'45%'}>
                 <VStack spacing={4} align="stretch">
+                    <Flex justifyContent={'center'} alignItems={'center'}>
+
+                        <Image
+                            src="/desireWhite.webp"
+                            alt="Desire Logo"
+                            width="36%"
+                            height="45%"
+                            objectFit="contain"
+                            mr={2}
+                        />
+
+                    </Flex>
+                    <Divider />
                     <Heading as="h2" size="lg" textAlign="center" color="white">Register</Heading>
                     <Input
                         placeholder="Email Address"
@@ -148,11 +161,11 @@ export default function Register() {
                         color="white"
                         _placeholder={{ color: 'gray.400' }}
                     />
-                    {!isVerified  && mobileNumber.includes('desireenergy.com') && <Flex alignItems={'flex-end'} display={'flex'} justifyContent={'flex-end'}>
+                    {!isVerified && mobileNumber.includes('desireenergy.com') && <Flex alignItems={'flex-end'} display={'flex'} justifyContent={'flex-end'}>
                         <Button isLoading={otpLoading} size={'sm'} w={'20%'} onClick={sendOtp} isDisabled={!mobileNumber.includes('desireenergy.com')}>Send Otp</Button>
                     </Flex>}
                     {isVerified && <InputGroup>
-                         <Input
+                        <Input
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -184,7 +197,7 @@ export default function Register() {
             </Box>
 
             {/* OTP Modal */}
-            <Modal isOpen={isOpen} bg="gray.800"  onClose={onClose}>
+            <Modal isOpen={isOpen} bg="gray.800" onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent bg="gray.800" color={'white'}>
                     <ModalHeader>Enter OTP</ModalHeader>
