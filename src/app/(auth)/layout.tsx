@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className} style={{ position: 'relative', minHeight: '100vh', background : '#F0FFF4' }}>
         <Providers>
-          <Header />
           {children}
         </Providers>
       </body>
