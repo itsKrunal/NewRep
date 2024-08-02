@@ -24,11 +24,11 @@ const Header = () => {
                     textAlign="center"
                 >
                     <Image
-                        src="/desireLogo.png"
+                        src="/desireWhite.webp"
                         alt="Desire Logo"
                         onClick={() => { router.push('/') }}
-                        width={'36%'}
-                        height={'45%'}
+                        width={'20%'}
+                        height={'20%'}
                         objectFit="contain"
                         mr={2}
                     />

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, InputRightElement, IconButton, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure, Image, Divider } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -154,9 +154,22 @@ export default function Register() {
     };
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
-            <Box bg="gray.800" p={8} boxShadow="md" width={['90%', '80%', '60%', '40%']} maxWidth="500px" height={'45%'}>
+        <Box display="flex" alignItems="center" justifyContent="center" height="90vh">
+            <Box bg="gray.800" p={8} boxShadow="md" width={['90%', '80%', '60%', '40%']} maxWidth="500px" borderRadius={'5%'} height={'57%'}>
                 <VStack spacing={4} align="stretch">
+                   <Flex justifyContent={'center'} alignItems={'center'}>
+
+                    <Image 
+                        src="/desireWhite.webp" 
+                        alt="Desire Logo"
+                        width="36%"
+                        height="45%"
+                        objectFit="contain"
+                        mr={2}
+                    />
+
+                   </Flex>
+                   <Divider/>
                     <Heading as="h2" size="lg" textAlign="center" color="white">Login</Heading>
                     <Input
                         placeholder="Email Address"
@@ -186,7 +199,7 @@ export default function Register() {
                             />
                         </InputRightElement>
                     </InputGroup>
-                    <Button type="button" colorScheme="green" onClick={handleLogin} isLoading={loading}>Login</Button>
+                    <Button type="button" colorScheme="green" onClick={handleLogin} border='0' isLoading={loading}>Login</Button>
                     <Flex alignItems="center" justifyContent="center">
                         {!showForgotPassword && <>
                             <Text textAlign="center" color="white">
