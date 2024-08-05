@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { MdHome, MdEmail, MdExitToApp, MdAccountCircle, MdLogin, MdLock } from 'react-icons/md';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
     const router = useRouter();
+    const user = useSelector((state) => state.user)
+    console.log("THOSSSS", user)
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [email, setEmail] = useState('');
-    const [isPublic, setIsPublic] = useState(false);
+    const [email, setEmail] = useState(user.email);
     const [showPassword, setShowPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [otp, setOtp] = useState('');
@@ -23,16 +25,11 @@ const Header = () => {
         router.push('/login');
     }
 
-    const getInfo = async () => {
-        try {
-            if(email.length > 0) return;
-            const resp = await axios.get('/api/me');
-            setIsPublic(false);
-            setEmail(resp.data.decodedToken.user.email);
-        } catch (error) {
-            setIsPublic(true);
-        }
-    }
+    useEffect(()=> {
+        setEmail(user.email)
+    }, [user])
+
+
 
     const sendOtp = async () => {
         setOtpLoading(true);
@@ -147,15 +144,13 @@ const Header = () => {
                         mr={2}
                     />
                 </Box>
-                <Box display={'flex'} alignItems={'center'} gap={'10px'} onClick={() => getInfo()}>
+                <Box display={'flex'} alignItems={'center'} gap={'10px'}>
                     <Menu>
                         <MenuButton as={Button} p={0} borderRadius="full" cursor="pointer" bg="transparent">
                             <Icon as={MdAccountCircle} w={10} h={10} color="black" />
                         </MenuButton>
                         <MenuList>
                             <MenuGroup  title="Account">
-                                {!isPublic ? (
-                                    <>
                                         <MenuItem icon={<MdHome />} onClick={() => { router.push('/') }}>Home</MenuItem>
                                         <MenuDivider />
                                         <MenuItem icon={<MdEmail />}>{email}</MenuItem>
@@ -163,10 +158,6 @@ const Header = () => {
                                         <MenuItem icon={<MdLock />} onClick={onOpen}>Reset Password</MenuItem>
                                         <MenuDivider />
                                         <MenuItem icon={<MdExitToApp />} onClick={logout}>Logout</MenuItem>
-                                    </>
-                                ) : (
-                                    <MenuItem icon={<MdLogin />} onClick={() => { router.push('/login') }}>Login</MenuItem>
-                                )}
                             </MenuGroup>
                         </MenuList>
                     </Menu>

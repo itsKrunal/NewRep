@@ -5,34 +5,11 @@ import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@chakra-ui/icons'; // Import the CheckCircleIcon
 import axios from 'axios';
 import surveySectionsArray from '../../../Utils/surveySections';
+import departments from '../../../Utils/departments';
+
 import './survey.css';
 import { useRouter } from 'next/navigation.js';
 
-const departments = [
-    "Admin",
-    "Aqualogix",
-    "Business Development",
-    "DTT",
-    "E&I",
-    "Engineering",
-    "EPC",
-    "ESCO",
-    "Expense",
-    "Finance and Accounts",
-    "HO",
-    "HO-Marketing",
-    "HR",
-    "Information Technology",
-    "MMC",
-    "Operations",
-    "PPC",
-    "Purchase",
-    "RO",
-    "Sales",
-    "SOLAR",
-    "Support",
-    "Tender"
-];
 
 const surveySections = surveySectionsArray;
 

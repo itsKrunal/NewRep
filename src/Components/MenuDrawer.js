@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import departments from '../Utils/departments';
 import {
     Box,
     Button,
@@ -20,15 +21,44 @@ import {
     Text,
     HStack,
     Divider,
-    Stack,
+    useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { FaProjectDiagram, FaUsers, FaFileAlt, FaWpforms, FaUserPlus, FaUserEdit, FaChartBar, FaDollarSign } from 'react-icons/fa';
 import { AiOutlineMenu } from "react-icons/ai";
+import UserModalAdd from '../Components/UserModalAdd'
+import EditUserModal from '../Components/EditUserModal'
+import { useSelector } from "react-redux";
 
 const MenuDrawer = () => {
+    const user = useSelector((state) => state.user);
     const router = useRouter();
+    const [reportRights, setReportRights] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isModalOpen,
+        onOpen: onModalOpen,
+        onClose: onModalClose
+    } = useDisclosure();
+    
+    const {
+        isOpen: isEditModalOpen,
+        onOpen: onEditModalOpen,
+        onClose: onEditModalClose
+    } = useDisclosure();
+    
+    
+    useEffect(()=> {
+        fetchRights();
+    }, [user])
+
+    useEffect(()=> {
+        console.log("RIGHTS", reportRights)
+    }, [reportRights])
+
+    const fetchRights = () => {
+        setReportRights(user.reportsRight)
+    }
 
     return (
         <Box position="relative" zIndex="overlay" backgroundColor={'green.100'}>
@@ -63,8 +93,8 @@ const MenuDrawer = () => {
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem icon={<FaUserPlus />}>New</MenuItem>
-                                    <MenuItem icon={<FaUserEdit />}>Edit</MenuItem>
+                                    <MenuItem icon={<FaUserPlus />} onClick={()=> {onModalOpen(); onClose();}}>New</MenuItem>
+                                    <MenuItem icon={<FaUserEdit />} onClick={()=> {onEditModalOpen(); onClose();}}>Edit</MenuItem>
                                 </MenuList>
                             </Menu>
 
@@ -78,9 +108,9 @@ const MenuDrawer = () => {
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem icon={<FaChartBar />}>PPC</MenuItem>
-                                    <MenuItem icon={<FaDollarSign />}>Finance</MenuItem>
-                                    <MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Survey</MenuItem>
+                                    {reportRights && reportRights.ppc == 1 &&  <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
+                                    {reportRights && reportRights.finance == 1 && <MenuItem icon={<FaDollarSign />}>Finance</MenuItem>}
+                                    {reportRights && reportRights.survey == 1 && <MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Survey</MenuItem>}
                                 </MenuList>
                             </Menu>
                             <Divider/>
@@ -101,6 +131,8 @@ const MenuDrawer = () => {
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
+            <EditUserModal isOpen={isEditModalOpen} onClose={onEditModalClose} />
+            <UserModalAdd isOpen={isModalOpen} onClose={onModalClose}/>
         </Box>
     );
 };

@@ -7,18 +7,41 @@ const { ObjectId } = Schema.Types; // Import ObjectId type
 // Define schema for players joined
 const userSchema = new Schema(
   {
+    eId: {
+      type: Number,
+    },
     email: {
       type: String,
       required: true,
     },
-    password : {
-        type : String,
-        required : true
+    userName: {
+      type: String,
+    },
+    department: {
+      type: String,
+    },
+    reportsRight: {
+      finance: {
+        type: Number,
+        default: 0,
+      },
+      ppc: {
+        type: Number,
+        default: 0,
+      },
+      survey: {
+        type: Number,
+        default: 0,
+      },
+    },
+    password: {
+      type: String,
+      required: true
     },
     role: {
       type: String,
       enum: ['Operator', 'Admin'],
-      default : 'Operator'
+      default: 'Operator'
     }
   },
   {

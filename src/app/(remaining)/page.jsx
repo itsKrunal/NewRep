@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -13,9 +13,34 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import CustomHeading from '../../StyleComponents/PageHeader';
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/lib/features/userSlice";
 
 const Page = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  useEffect(()=> {
+    fetchUserData();
+  }, [])
+
+  const fetchUserData = async () => {
+    try {
+      const info = await axios.get('/api/me');
+      const user =  info.data.decodedToken.user;
+      dispatch(setUser({
+        email : user.email,
+        role : user.role,
+        eId : user.eId,
+        userName : user.userName,
+        department : user.department,
+        reportsRight : user.reportsRight
+      }))
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <Box p={4} bg={"green.50"} height={'100vh'} w={'100%'}>
