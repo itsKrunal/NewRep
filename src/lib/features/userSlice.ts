@@ -5,38 +5,54 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 export interface UsersState {
   email: string
   role: string,
-  reportsRight : Object,
-  department : string,
-  userName : string,
-  eId : string
+  reportsRight: Object,
+  department: string,
+  userName: string,
+  eId: string
 }
 
 // Define the initial state using that type
-//@ts-ignore
-const initialState: UsersState = () => {
-    //@ts-ignore
-    const info : UsersState = JSON.parse(localStorage.getItem('user'));
-    return info ? info : {
-        email : '',
-        role : '',
-        reportsRight : {},
-        department : '',
-        userName : '',
-        eId : '',
-     };
+const getInitialState = (): UsersState => {
+  if (typeof window !== 'undefined') {
+    const info = localStorage.getItem('user');
+    return info ? JSON.parse(info) : {
+      email: '',
+      role: '',
+      reportsRight: {},
+      department: '',
+      userName: '',
+      eId: '',
+    };
+  } else {
+    return {
+      email: '',
+      role: '',
+      reportsRight: {},
+      department: '',
+      userName: '',
+      eId: '',
+    };
+  }
 }
+
+const initialState: UsersState = getInitialState();
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UsersState>) => {
-      const newState =  { ...state, ...action.payload }
-      localStorage.setItem("user", JSON.stringify(newState))
+      const newState = { ...state, ...action.payload }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("user", JSON.stringify(newState))
+      }
       return newState;
     },
-    resetUser: (state) => {
-      return initialState
+    resetUser: () => {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("user")
+      }
+      return getInitialState();
     }
   }
 })
