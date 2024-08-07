@@ -32,11 +32,11 @@ const UserAddModal = ({ isOpen, onClose }) => {
     const [department, setDepartment] = useState('');
     const [email, setEmail] = useState('');
     const [reportAccess, setReportAccess] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
     const handleSave = async () => {
-
         if (!/^\d{3,4}$/.test(eId)) {
             toast({
                 title: "Invalid ERP ID",
@@ -97,6 +97,10 @@ const UserAddModal = ({ isOpen, onClose }) => {
             }
         };
 
+        if (isAdmin) {
+            userData.role = 'Admin';
+        }
+
         try {
             setLoading(true);
             await axios.post('/api/addMainUser', userData);
@@ -125,7 +129,8 @@ const UserAddModal = ({ isOpen, onClose }) => {
             setUserName('');
             setReportAccess([]);
             setEmail('');
-            setLoading(false)
+            setIsAdmin(false);
+            setLoading(false);
         }
     };
 
@@ -227,6 +232,22 @@ const UserAddModal = ({ isOpen, onClose }) => {
                                     <Checkbox colorScheme="green" value="survey">Survey</Checkbox>
                                 </Stack>
                             </CheckboxGroup>
+                        </FormControl>
+                        <Divider />
+                        <FormControl borderColor={'green.200'}>
+                            <FormLabel>
+                                <HStack spacing={2}>
+                                    <Icon as={FaCheckCircle} />
+                                    <span>Admin</span>
+                                </HStack>
+                            </FormLabel>
+                            <Checkbox
+                                colorScheme="green"
+                                isChecked={isAdmin}
+                                onChange={(e) => setIsAdmin(e.target.checked)}
+                            >
+                                Admin
+                            </Checkbox>
                         </FormControl>
                     </VStack>
                 </ModalBody>

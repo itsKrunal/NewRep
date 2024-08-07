@@ -30,6 +30,7 @@ const EditUserModal = ({ isOpen, onClose }) => {
     const [selectedUserId, setSelectedUserId] = useState('');
     const [users, setUsers] = useState([]);
     const [userData, setUserData] = useState({});
+    const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
@@ -46,8 +47,6 @@ const EditUserModal = ({ isOpen, onClose }) => {
     const fetchUsers = async () => {
         try {
             const response = await axios.get('/api/getMainUsers');
-
-            console.log("THISSSISSISISI", response.data.data)
             setUsers(response.data.data);
         } catch (error) {
             toast({
@@ -66,7 +65,6 @@ const EditUserModal = ({ isOpen, onClose }) => {
     }, [userData])
 
     const handleUserSelect = (e) => {
-        console.log(e.target.value);
         const userId = e.target.value;
         setSelectedUserId(userId);
         const selectedUser = users.find(user => user.email === userId);
@@ -82,6 +80,7 @@ const EditUserModal = ({ isOpen, onClose }) => {
                     selectedUser.reportsRight.survey ? "survey" : ""
                 ].filter(Boolean)
             });
+            setIsAdmin(selectedUser.role === "Admin");
         }
     };
 
@@ -129,7 +128,8 @@ const EditUserModal = ({ isOpen, onClose }) => {
                 finance: userData.reportAccess.includes("finance") ? 1 : 0,
                 ppc: userData.reportAccess.includes("ppc") ? 1 : 0,
                 survey: userData.reportAccess.includes("survey") ? 1 : 0,
-            }
+            },
+            role: isAdmin ? "Admin" : undefined
         };
 
         try {
@@ -157,6 +157,7 @@ const EditUserModal = ({ isOpen, onClose }) => {
         } finally {
             setSelectedUserId('');
             setUserData({});
+            setIsAdmin(false);
             setLoading(false);
         }
     };
@@ -167,8 +168,6 @@ const EditUserModal = ({ isOpen, onClose }) => {
             <ModalContent>
                 <ModalHeader>Edit User</ModalHeader>
                 <Divider />
-                <Divider mt={4} mb={2} />
-
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack spacing={4} align="start" width="full">
@@ -188,10 +187,9 @@ const EditUserModal = ({ isOpen, onClose }) => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <Divider />
-                        <Divider />
                         {selectedUserId && (
                             <>
+                                <Divider />
                                 <FormControl borderColor={'green.200'}>
                                     <FormLabel>
                                         <HStack spacing={2}>
@@ -211,19 +209,6 @@ const EditUserModal = ({ isOpen, onClose }) => {
                                     />
                                 </FormControl>
                                 <Divider />
-                                {/* <FormControl>
-                                    <FormLabel>
-                                        <HStack>
-                                            <Icon as={EmailIcon} />
-                                            <span>Email</span>
-                                        </HStack>
-                                    </FormLabel>
-                                    <Input
-                                        value={userData.email || ''}
-                                        isReadOnly
-                                        color="black"
-                                    />
-                                </FormControl> */}
                                 <FormControl borderColor={'green.200'}>
                                     <FormLabel>
                                         <HStack spacing={2}>
@@ -278,6 +263,22 @@ const EditUserModal = ({ isOpen, onClose }) => {
                                             <Checkbox colorScheme="green" value="survey">Survey</Checkbox>
                                         </Stack>
                                     </CheckboxGroup>
+                                </FormControl>
+                                <Divider />
+                                <FormControl borderColor={'green.200'}>
+                                    <FormLabel>
+                                        <HStack spacing={2}>
+                                            <Icon as={FaCheckCircle} />
+                                            <span>Admin</span>
+                                        </HStack>
+                                    </FormLabel>
+                                    <Checkbox
+                                        colorScheme="green"
+                                        isChecked={isAdmin}
+                                        onChange={(e) => setIsAdmin(e.target.checked)}
+                                    >
+                                        Admin
+                                    </Checkbox>
                                 </FormControl>
                             </>
                         )}

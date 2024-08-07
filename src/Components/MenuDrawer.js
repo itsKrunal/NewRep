@@ -34,6 +34,8 @@ const MenuDrawer = () => {
     const user = useSelector((state) => state.user);
     const router = useRouter();
     const [reportRights, setReportRights] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(false);
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isModalOpen,
@@ -57,6 +59,7 @@ const MenuDrawer = () => {
     }, [reportRights])
 
     const fetchRights = () => {
+        setIsAdmin(user.role == 'Admin')
         setReportRights(user.reportsRight)
     }
 
@@ -101,7 +104,7 @@ const MenuDrawer = () => {
                             <Divider />
 
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" variant="outline">
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between"  variant="outline">
                                     <HStack spacing={2}>
                                         <FaFileAlt />
                                         <Text>Reports</Text>
