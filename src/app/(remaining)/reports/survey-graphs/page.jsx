@@ -30,8 +30,8 @@ const MetricsPage = () => {
     const getMetricData = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
             );
 
         const metricCounts = filteredSurveys.reduce((acc, survey) => {
@@ -67,8 +67,8 @@ const MetricsPage = () => {
     const getMetricSummary = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
             );
 
         const metricCounts = filteredSurveys.reduce((acc, survey) => {
@@ -91,8 +91,8 @@ const MetricsPage = () => {
     const getOverallSatisfaction = () => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
             );
 
         const totalMetrics = ['trust', 'respect', 'pride', 'camaraderie', 'fairness'];
