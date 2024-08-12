@@ -29,6 +29,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import UserModalAdd from '../Components/UserModalAdd'
 import EditUserModal from '../Components/EditUserModal'
 import { useSelector } from "react-redux";
+import { MdHelp, MdRequestPage } from "react-icons/md";
 
 const MenuDrawer = () => {
     const user = useSelector((state) => state.user);
@@ -42,19 +43,19 @@ const MenuDrawer = () => {
         onOpen: onModalOpen,
         onClose: onModalClose
     } = useDisclosure();
-    
+
     const {
         isOpen: isEditModalOpen,
         onOpen: onEditModalOpen,
         onClose: onEditModalClose
     } = useDisclosure();
-    
-    
-    useEffect(()=> {
+
+
+    useEffect(() => {
         fetchRights();
     }, [user])
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log("RIGHTS", reportRights)
     }, [reportRights])
 
@@ -89,53 +90,73 @@ const MenuDrawer = () => {
                     <DrawerBody p={4}>
                         <VStack align="start" spacing={4} width="full">
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" variant="outline">
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
                                     <HStack spacing={2}>
                                         <FaUsers />
                                         <Text>Users</Text>
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem icon={<FaUserPlus />} onClick={()=> {onModalOpen(); onClose();}}>New</MenuItem>
-                                    <MenuItem icon={<FaUserEdit />} onClick={()=> {onEditModalOpen(); onClose();}}>Edit</MenuItem>
+                                    <MenuItem icon={<FaUserPlus />} onClick={() => { onModalOpen(); onClose(); }}>New</MenuItem>
+                                    <MenuItem icon={<FaUserEdit />} onClick={() => { onEditModalOpen(); onClose(); }}>Edit</MenuItem>
                                 </MenuList>
                             </Menu>
-
                             <Divider />
-
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between"  variant="outline">
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
                                     <HStack spacing={2}>
                                         <FaFileAlt />
                                         <Text>Reports</Text>
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    {reportRights && reportRights.ppc == 1 &&  <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
+                                    {reportRights && reportRights.ppc == 1 && <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
                                     {reportRights && reportRights.finance == 1 && <MenuItem icon={<FaDollarSign />}>Finance</MenuItem>}
-                                    {reportRights && reportRights.survey == 1 && <MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Survey</MenuItem>}
+                                    {reportRights && reportRights.survey == 1 && <Menu>
+                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" variant={'outline'} border={'1px solid white'} justifyContent="space-between" >
+                                            <HStack spacing={2}>
+                                                <FaFileAlt />
+                                                <Text>Survey</Text>
+                                            </HStack>
+                                        </MenuButton>
+                                        <MenuList>
+                                            {<MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Tabular Reports</MenuItem>}
+                                            {<MenuItem icon={<FaChartBar />} onClick={() => { router.push('/reports/survey-graphs'); onClose() }}>Analytical Report </MenuItem>}
+                                        </MenuList>
+                                    </Menu>}
                                 </MenuList>
                             </Menu>
-                            <Divider/>
+                            <Divider />
                             <Button
                                 width="full"
                                 justifyContent="space-between"
-                                variant={'outline'}
                                 colorScheme="green"
                                 onClick={() => { router.push('/survey-form'); onClose() }}
                             >
-                                <HStack spacing={2} align="center">
+                                <HStack spacing={2}  align="center">
                                     <FaWpforms />
                                     <Text>Survey Form</Text>
                                 </HStack>
                             </Button>
-
+                            <Divider />
+                            <Menu>
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
+                                    <HStack spacing={2}>
+                                        <MdHelp />
+                                        <Text>Feature Request</Text>
+                                    </HStack>
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuItem icon={<FaUserPlus />} onClick={() => { onModalOpen(); onClose(); }}>New</MenuItem>
+                                    <MenuItem icon={<FaUserEdit />} onClick={() => { onEditModalOpen(); onClose(); }}>Status</MenuItem>
+                                </MenuList>
+                            </Menu>
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
             <EditUserModal isOpen={isEditModalOpen} onClose={onEditModalClose} />
-            <UserModalAdd isOpen={isModalOpen} onClose={onModalClose}/>
+            <UserModalAdd isOpen={isModalOpen} onClose={onModalClose} />
         </Box>
     );
 };

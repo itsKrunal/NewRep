@@ -12,12 +12,15 @@ export async function GET(request: NextRequest) {
 
         console.log(decodedToken)
         //@ts-ignore
-        if (!decodedToken.user.role || decodedToken.user.role != 'Admin')
-            return NextResponse.json({
-                message: "Unauthenticated"
-            }, { status: 401 })
+        const isAdmin =  decodedToken.user.role == 'Admin';
 
-        const data = await SurveyScehma.find();
+        let data;
+        if(isAdmin)
+            data = await SurveyScehma.find();
+        else
+            //@ts-ignore
+            data = await SurveyScehma.find({email : decodedToken.user.email})
+        
         return NextResponse.json({
             data
         }, { status: 200 })

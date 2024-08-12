@@ -1,18 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Pie } from "react-chartjs-2";
+import { Pie, Bar } from "react-chartjs-2";
 import CustomHeading from "@/StyleComponents/PageHeader";
-import { Box, SimpleGrid, VStack, Heading, Card, CardHeader, CardBody, Flex, Text } from "@chakra-ui/react";
-import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Select as AntSelect } from 'antd';
+import { Box, SimpleGrid, VStack, Heading, Card, CardHeader, CardBody, Flex, Text, Divider } from "@chakra-ui/react";
+import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, Tooltip, Legend, BarElement, registerables } from 'chart.js';
+import { Select as AntSelect } from 'antd'
 
-ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
+ChartJS.register(...registerables, CategoryScale, LinearScale, ArcElement, Tooltip, Legend, BarElement);
 
 const MetricsPage = () => {
     const [surveys, setSurveys] = useState([]);
     const [selectedEmails, setSelectedEmails] = useState([]);
-    const [selectedDepartments, setSelectedDepartments] = useState([]);
+    const [selectedDepartments, setSelectedDepartments] = useState('');
+    const questionsArray = require('../../../../Utils/questions')
+
+    useEffect(() => {
+        if (typeof selectedDepartments === 'undefined')
+            setSelectedDepartments('');
+    }, [selectedDepartments]);
 
     useEffect(() => {
         fetchData();
@@ -30,8 +36,8 @@ const MetricsPage = () => {
     const getMetricData = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
             );
 
         const metricCounts = filteredSurveys.reduce((acc, survey) => {
@@ -44,7 +50,6 @@ const MetricsPage = () => {
             return acc;
         }, {});
 
-        // Map numeric values to labels
         const labelMap = {
             0: 'No',
             1: 'Yes'
@@ -58,7 +63,7 @@ const MetricsPage = () => {
             datasets: [
                 {
                     data,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#46BF91'], // Example colors
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#46BF91'],
                 }
             ]
         };
@@ -67,8 +72,8 @@ const MetricsPage = () => {
     const getMetricSummary = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
             );
 
         const metricCounts = filteredSurveys.reduce((acc, survey) => {
@@ -81,7 +86,6 @@ const MetricsPage = () => {
             return acc;
         }, {});
 
-        // Calculate totals
         const totalYes = metricCounts[1] || 0;
         const totalNo = metricCounts[0] || 0;
 
@@ -91,8 +95,8 @@ const MetricsPage = () => {
     const getOverallSatisfaction = () => {
         const filteredSurveys = surveys
             .filter(survey =>
-                (selectedEmails?.length === 0 || selectedEmails.includes(survey.email)) &&
-                (selectedDepartments?.length === 0 || selectedDepartments.includes(survey.department))
+                (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
             );
 
         const totalMetrics = ['trust', 'respect', 'pride', 'camaraderie', 'fairness'];
@@ -105,7 +109,6 @@ const MetricsPage = () => {
             totalResponses += totalYes + totalNo;
         });
 
-        // Calculate the average satisfaction as a percentage
         const averageSatisfaction = totalResponses > 0 ? (totalYesCount / totalResponses) * 100 : 0;
         return averageSatisfaction.toFixed(2);
     };
@@ -124,6 +127,50 @@ const MetricsPage = () => {
         return { totalYes, totalNo };
     };
 
+    const getBarGraphData = (metricPrefix) => {
+        const filteredSurveys = surveys
+            .filter(survey =>
+                (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
+                (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
+            );
+
+        const metricData = filteredSurveys.reduce((acc, survey) => {
+            Object.keys(survey).forEach(key => {
+                if (key.startsWith(metricPrefix)) {
+                    const value = survey[key];
+                    acc[key] = acc[key] || { yes: 0, no: 0 };
+                    if (value === 1) {
+                        acc[key].yes += 1;
+                    } else if (value === 0) {
+                        acc[key].no += 1;
+                    }
+                }
+            });
+            return acc;
+        }, {});
+
+        const labels = Object.keys(metricData).map((key, index) => key);
+        const yesData = labels.map(label => metricData[Object.keys(metricData)[labels.indexOf(label)]].yes);
+        const noData = labels.map(label => metricData[Object.keys(metricData)[labels.indexOf(label)]].no);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Yes',
+                    data: yesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                },
+                {
+                    label: 'No',
+                    data: noData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                }
+            ]
+        };
+    };
+
+
     const handleEmailChange = (value) => {
         setSelectedEmails(value);
     };
@@ -132,83 +179,144 @@ const MetricsPage = () => {
         setSelectedDepartments(value);
     };
 
-    const emailOptions = surveys.map(survey => ({ label: survey.email, value: survey.email }));
+    const emailOptions = surveys.map(survey => ({ label: survey.email, value: survey.email, department: survey.department }));
     const departmentOptions = [...new Set(surveys.map(survey => survey.department))].map(department => ({ label: department, value: department }));
 
     const { totalYes, totalNo } = getInsights();
+   
+
+    const options = {
+        plugins: {
+            tooltip: {
+                enabled: true,
+                external: function (context) {
+                    const { tooltip } = context;
+                    let tooltipEl = document.getElementById('chartjs-tooltip');
+    
+                    // Create element on first render
+                    if (!tooltipEl) {
+                        tooltipEl = document.createElement('div');
+                        tooltipEl.id = 'chartjs-tooltip';
+                        tooltipEl.style.position = 'absolute';
+                        tooltipEl.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                        tooltipEl.style.color = 'white';
+                        tooltipEl.style.padding = '10px';
+                        tooltipEl.style.borderRadius = '3px';
+                        tooltipEl.style.pointerEvents = 'none';
+                        tooltipEl.style.opacity = 0;  // Start hidden
+                        document.body.appendChild(tooltipEl);
+                    }
+    
+                    // Hide if no tooltip
+                    if (tooltip.opacity === 0) {
+                        tooltipEl.style.opacity = 0;
+                        return;
+                    }
+    
+                    // Set text content
+                    tooltipEl.innerHTML = `<div style="white-space: pre-wrap;">${tooltip.body.map(item => item.lines.join('\n')).join('\n')}</div>`;
+    
+                    // Set position and display
+                    const position = context.chart.canvas.getBoundingClientRect();
+                    tooltipEl.style.opacity = 1;
+                    tooltipEl.style.left = `${position.left + tooltip.caretX}px`;
+                    tooltipEl.style.top = `${position.top + tooltip.caretY}px`;
+                },
+                callbacks: {
+                    title: function (tooltipItems) {
+                        return questionsArray[tooltipItems[0].label]; // Adjust as needed
+                    },
+                    label: function (tooltipItem) {
+                        let label = tooltipItem.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += tooltipItem.raw + ' responses';
+                        return label;
+                    }
+                }
+            }
+        },
+        responsive: true,
+        scales: {
+            x: {
+                stacked: true,
+                beginAtZero: true,
+                ticks: {
+                    callback: function (value, index, values) {
+                        return `Q${index + 1}`;
+                    }
+                }
+            },
+            y: {
+                stacked: true,
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1, // Set step size to 1 for whole numbers
+                    max: undefined, // Optionally set max value to control the scale
+                    callback: function (value) {
+                        return Number.isInteger(value) ? value : null; // Only display whole numbers
+                    }
+                }
+            }
+        }
+    };
+    
+
+
 
     return (
         <Box p={4} bg={"green.50"} height={'100vh'} w={'100%'}>
             <VStack spacing={6} align="stretch" mt={'3.5em'}>
+
                 <Card boxShadow={'lg'}>
                     <CardHeader>
-                        <CustomHeading prop={'Survey Report Analysis'} />
+                        <CustomHeading prop={'Analytical Reports'} />
                     </CardHeader>
                     <CardBody>
-                        <Card boxShadow={'0px 4px 6px rgba(0, 0, 0, 0.2, 0.3)'} p={3}>
-                            <Box mb={6}>
-                                <Flex gap={'10px'}>
-                                    <AntSelect
-                                        mode="single"
-                                        allowClear
-                                        placeholder="Select department"
-                                        onChange={handleDepartmentChange}
-                                        style={{ width: '20%' }}
-                                        options={departmentOptions}
-                                    />
-                                    <AntSelect
-                                        mode="multiple"
-                                        allowClear
-                                        placeholder="Select emails"
-                                        onChange={handleEmailChange}
-                                        style={{ width: '80%', marginBottom: '1em' }}
-                                        options={emailOptions}
-                                    />
-                                </Flex>
-                            </Box>
-                            <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 5 }} mt={10} spacing={6}>
-                                <Card boxShadow={'lg'} p={3}>
-                                    <CardHeader>
-                                        <Heading size="md">Trust Metrics</Heading>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Pie data={getMetricData("trust")} />
-                                    </CardBody>
-                                </Card>
-                                <Card boxShadow={'lg'} p={3}>
-                                    <CardHeader>
-                                        <Heading size="md">Respect Metrics</Heading>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Pie data={getMetricData("respect")} />
-                                    </CardBody>
-                                </Card>
-                                <Card boxShadow={'lg'} p={3}>
-                                    <CardHeader>
-                                        <Heading size="md">Pride Metrics</Heading>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Pie data={getMetricData("pride")} />
-                                    </CardBody>
-                                </Card>
-                                <Card boxShadow={'lg'} p={3}>
-                                    <CardHeader>
-                                        <Heading size="md">Camaraderie Metrics</Heading>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Pie data={getMetricData("camaraderie")} />
-                                    </CardBody>
-                                </Card>
-                                <Card boxShadow={'lg'} p={3}>
-                                    <CardHeader>
-                                        <Heading size="md">Fairness Metrics</Heading>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Pie data={getMetricData("fairness")} />
-                                    </CardBody>
-                                </Card>
-                            </SimpleGrid>
-                            <Box mt={10}>
+                        <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+
+                            <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                                {/* <CardHeader display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                    <Box >
+                                        <Heading fontSize="lg" p={5} background={'green.100'} borderRadius={'20%'} whiteSpace={'nowrap'}  mr={'3%'}>Filter Box</Heading>
+                                    </Box>
+                                    <Flex gap={'20px'}>
+                                        <Text fontSize="lg" p={5} background={'blue.100'} borderRadius={'20%'} mb={2}>
+                                            <strong>Total Yes:</strong> {totalYes}
+                                        </Text>
+                                        <Text fontSize="lg" p={5} background={'blue.100'} borderRadius={'20%'} mb={2}>
+                                            <strong>Total No:</strong> {totalNo}
+                                        </Text>
+                                        <Text fontSize="lg" p={5} background={'blue.100'} borderRadius={'20%'} mb={2}>
+                                            <strong>Overall Satisfaction:</strong> {getOverallSatisfaction()}%
+                                        </Text>
+                                    </Flex>
+                                </CardHeader> */}
+                                <CardBody>
+                                    <Flex gap={'10px'}>
+                                        <AntSelect
+                                            mode="single"
+                                            allowClear
+                                            placeholder="Select department"
+                                            onChange={handleDepartmentChange}
+                                            style={{ width: '20%' }}
+                                            options={departmentOptions}
+                                        />
+                                        <AntSelect
+                                            mode="multiple"
+                                            allowClear
+                                            placeholder="Select emails"
+                                            onChange={handleEmailChange}
+                                            style={{ width: '80%', marginBottom: '1em' }}
+                                            options={emailOptions.filter((item) => selectedDepartments?.length == 0 || selectedDepartments == item.department)}
+                                        />
+                                    </Flex>
+                                </CardBody>
+                            </Card>
+                        </Card>
+                        <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                            <Box>
                                 <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
                                     <CardHeader>
                                         <Heading size="md" color="teal.600">Insights</Heading>
@@ -229,6 +337,129 @@ const MetricsPage = () => {
                                 </Card>
                             </Box>
                         </Card>
+                        <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                            <CardHeader>
+                                <Heading size="md" color="teal.600"> Metrics Breakdown</Heading>
+                            </CardHeader>
+                            <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 5 }} mt={10} spacing={6}>
+                                <Card boxShadow={'lg'} p={3}>
+                                    <CardHeader>
+                                        <Heading size="md">Trust Metrics</Heading>
+                                    </CardHeader>
+                                    <Divider color={'green.200'} />
+                                    <CardBody>
+                                        <Pie data={getMetricData("trust")} />
+                                    </CardBody>
+                                </Card>
+                                <Card boxShadow={'lg'} p={3}>
+                                    <CardHeader>
+                                        <Heading size="md">Respect Metrics</Heading>
+                                    </CardHeader>
+                                    <Divider color={'green.200'} />
+                                    <CardBody>
+                                        <Pie data={getMetricData("respect")} />
+                                    </CardBody>
+                                </Card>
+                                <Card boxShadow={'lg'} p={3}>
+                                    <CardHeader>
+                                        <Heading size="md">Pride Metrics</Heading>
+                                    </CardHeader>
+                                    <Divider color={'green.200'} />
+                                    <CardBody>
+                                        <Pie data={getMetricData("pride")} />
+                                    </CardBody>
+                                </Card>
+                                <Card boxShadow={'lg'} p={3}>
+                                    <CardHeader>
+                                        <Heading size="md">Camaraderie Metrics</Heading>
+                                    </CardHeader>
+                                    <Divider color={'green.200'} />
+                                    <CardBody>
+                                        <Pie data={getMetricData("camaraderie")} />
+                                    </CardBody>
+                                </Card>
+                                <Card boxShadow={'lg'} p={3}>
+                                    <CardHeader>
+                                        <Heading size="md">Fairness Metrics</Heading>
+                                    </CardHeader>
+                                    <Divider color={'green.200'} />
+                                    <CardBody>
+                                        <Pie data={getMetricData("fairness")} />
+                                    </CardBody>
+                                </Card>
+                            </SimpleGrid>
+                        </Card>
+                        {/* <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                            <CardHeader>
+                                <Heading size="md" color="teal.600">Detailed Question Breakdown</Heading>
+                            </CardHeader>
+                            <CardBody>
+                                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
+                                    <Card boxShadow={'lg'} p={4} borderRadius="md" bg="gray.50">
+                                        <CardHeader>
+                                            <Heading size="sm">Trust Questions</Heading>
+                                        </CardHeader>
+                                        <Divider color={'green.200'} />
+                                        <CardBody>
+                                            <Bar
+                                                data={getBarGraphData("trust")}
+                                                options={{ ...options, maintainAspectRatio: true }}
+                                            />
+
+                                        </CardBody>
+                                    </Card>
+
+                                    <Card boxShadow={'lg'} p={4} borderRadius="md" bg="gray.50">
+                                        <CardHeader>
+                                            <Heading size="sm">Respect Questions</Heading>
+                                        </CardHeader>
+                                        <Divider color={'green.200'} />
+                                        <CardBody>
+                                            <Bar data={getBarGraphData("respect")}
+                                                options={{ ...options, maintainAspectRatio: true }}
+                                            />
+                                        </CardBody>
+                                    </Card>
+
+                                    <Card boxShadow={'lg'} p={4} borderRadius="md" bg="gray.50">
+                                        <CardHeader>
+                                            <Heading size="sm">Pride Questions</Heading>
+                                        </CardHeader>
+                                        <Divider color={'green.200'} />
+                                        <CardBody>
+                                            <Bar data={getBarGraphData("pride")}
+                                                options={{ ...options, maintainAspectRatio: true }}
+                                            />
+                                        </CardBody>
+                                    </Card>
+
+                                    <Card boxShadow={'lg'} p={4} borderRadius="md" bg="gray.50">
+                                        <CardHeader>
+                                            <Heading size="sm">Camaraderie Questions</Heading>
+                                        </CardHeader>
+                                        <Divider color={'green.200'} />
+                                        <CardBody>
+                                            <Bar data={getBarGraphData("camaraderie")}
+                                                options={{ ...options, maintainAspectRatio: true }}
+                                            />
+                                        </CardBody>
+                                    </Card>
+
+                                    <Card boxShadow={'lg'} p={4} borderRadius="md" bg="gray.50">
+                                        <CardHeader>
+                                            <Heading size="sm">Fairness Questions</Heading>
+                                        </CardHeader>
+                                        <Divider color={'green.200'} />
+                                        <CardBody>
+                                            <Bar data={getBarGraphData("fairness")}
+                                                options={{ ...options, maintainAspectRatio: true }}
+                                            />
+                                        </CardBody>
+                                    </Card>
+                                </SimpleGrid>
+                            </CardBody>
+                        </Card> */}
+
                     </CardBody>
                 </Card>
             </VStack>
