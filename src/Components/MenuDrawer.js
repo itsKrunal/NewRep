@@ -96,10 +96,10 @@ const MenuDrawer = () => {
                                         <Text>Users</Text>
                                     </HStack>
                                 </MenuButton>
-                                <MenuList>
+                                {isAdmin == 'Admin' && <MenuList>
                                     <MenuItem icon={<FaUserPlus />} onClick={() => { onModalOpen(); onClose(); }}>New</MenuItem>
                                     <MenuItem icon={<FaUserEdit />} onClick={() => { onEditModalOpen(); onClose(); }}>Edit</MenuItem>
-                                </MenuList>
+                                </MenuList>}
                             </Menu>
                             <Divider />
                             <Menu>
@@ -147,8 +147,8 @@ const MenuDrawer = () => {
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem icon={<FaUserPlus />} onClick={() => { onModalOpen(); onClose(); }}>New</MenuItem>
-                                    <MenuItem icon={<FaUserEdit />} onClick={() => { onEditModalOpen(); onClose(); }}>Status</MenuItem>
+                                    <MenuItem icon={<FaUserPlus />}>New</MenuItem>
+                                    <MenuItem icon={<FaUserEdit />}>Status</MenuItem>
                                 </MenuList>
                             </Menu>
                         </VStack>
