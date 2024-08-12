@@ -111,7 +111,7 @@ const MenuDrawer = () => {
                                 </MenuButton>
                                 <MenuList>
                                     {reportRights && reportRights.ppc == 1 && <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
-                                    {reportRights && reportRights.finance == 1 && <MenuItem icon={<FaDollarSign />}>Finance</MenuItem>}
+                                    {reportRights && reportRights.finance == 1 && <MenuItem onClick={()=> router.push('reports/finance-form')} icon={<FaDollarSign />}>Finance</MenuItem>}
                                     {reportRights && reportRights.survey == 1 && <Menu>
                                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" variant={'outline'} border={'1px solid white'} justifyContent="space-between" >
                                             <HStack spacing={2}>

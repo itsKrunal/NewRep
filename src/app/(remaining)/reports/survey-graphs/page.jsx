@@ -126,14 +126,14 @@ const MetricsPage = () => {
 
         return { totalYes, totalNo };
     };
-
+    
     const getBarGraphData = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
                 (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
                 (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
             );
-
+    
         const metricData = filteredSurveys.reduce((acc, survey) => {
             Object.keys(survey).forEach(key => {
                 if (key.startsWith(metricPrefix)) {
@@ -148,28 +148,34 @@ const MetricsPage = () => {
             });
             return acc;
         }, {});
-
+    
         const labels = Object.keys(metricData).map((key, index) => key);
-        const yesData = labels.map(label => metricData[Object.keys(metricData)[labels.indexOf(label)]].yes);
-        const noData = labels.map(label => metricData[Object.keys(metricData)[labels.indexOf(label)]].no);
-
+        const yesData = labels.map(label => {
+            const total = metricData[label].yes + metricData[label].no;
+            return total > 0 ? (metricData[label].yes / total) * 100 : 0;
+        });
+        const noData = labels.map(label => {
+            const total = metricData[label].yes + metricData[label].no;
+            return total > 0 ? (metricData[label].no / total) * 100 : 0;
+        });
+    
         return {
             labels,
             datasets: [
                 {
-                    label: 'Yes',
+                    label: 'Yes ',
                     data: yesData,
                     backgroundColor: 'rgba(75, 192, 192, 0.6)',
                 },
                 {
-                    label: 'No',
+                    label: 'No ',
                     data: noData,
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                 }
             ]
         };
     };
-
+    
 
     const handleEmailChange = (value) => {
         setSelectedEmails(value);
@@ -184,55 +190,26 @@ const MetricsPage = () => {
 
     const { totalYes, totalNo } = getInsights();
    
-
     const options = {
         plugins: {
             tooltip: {
-                enabled: true,
-                external: function (context) {
-                    const { tooltip } = context;
-                    let tooltipEl = document.getElementById('chartjs-tooltip');
-    
-                    // Create element on first render
-                    if (!tooltipEl) {
-                        tooltipEl = document.createElement('div');
-                        tooltipEl.id = 'chartjs-tooltip';
-                        tooltipEl.style.position = 'absolute';
-                        tooltipEl.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                        tooltipEl.style.color = 'white';
-                        tooltipEl.style.padding = '10px';
-                        tooltipEl.style.borderRadius = '3px';
-                        tooltipEl.style.pointerEvents = 'none';
-                        tooltipEl.style.opacity = 0;  // Start hidden
-                        document.body.appendChild(tooltipEl);
-                    }
-    
-                    // Hide if no tooltip
-                    if (tooltip.opacity === 0) {
-                        tooltipEl.style.opacity = 0;
-                        return;
-                    }
-    
-                    // Set text content
-                    tooltipEl.innerHTML = `<div style="white-space: pre-wrap;">${tooltip.body.map(item => item.lines.join('\n')).join('\n')}</div>`;
-    
-                    // Set position and display
-                    const position = context.chart.canvas.getBoundingClientRect();
-                    tooltipEl.style.opacity = 1;
-                    tooltipEl.style.left = `${position.left + tooltip.caretX}px`;
-                    tooltipEl.style.top = `${position.top + tooltip.caretY}px`;
-                },
                 callbacks: {
                     title: function (tooltipItems) {
                         return questionsArray[tooltipItems[0].label]; // Adjust as needed
                     },
                     label: function (tooltipItem) {
-                        let label = tooltipItem.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += tooltipItem.raw + ' responses';
-                        return label;
+                        const datasetLabel = tooltipItem.dataset.label || '';
+                        const dataIndex = tooltipItem.dataIndex;
+                        const value = tooltipItem.raw;
+    
+                        // Get the count from the dataset
+                        const dataset = tooltipItem.dataset.data;
+                        const totalCount = dataset.reduce((acc, curr) => acc + curr, 0);
+    
+                        // Calculate percentage
+                        const percentage = (value / totalCount) * 100;
+    
+                        return `${datasetLabel}: ${value}%`;
                     }
                 }
             }
@@ -250,17 +227,10 @@ const MetricsPage = () => {
             },
             y: {
                 stacked: true,
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1, // Set step size to 1 for whole numbers
-                    max: undefined, // Optionally set max value to control the scale
-                    callback: function (value) {
-                        return Number.isInteger(value) ? value : null; // Only display whole numbers
-                    }
-                }
             }
         }
     };
+    
     
 
 
@@ -389,7 +359,7 @@ const MetricsPage = () => {
                                 </Card>
                             </SimpleGrid>
                         </Card>
-                        {/* <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                        <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
                             <CardHeader>
                                 <Heading size="md" color="teal.600">Detailed Question Breakdown</Heading>
                             </CardHeader>
@@ -458,7 +428,7 @@ const MetricsPage = () => {
                                     </Card>
                                 </SimpleGrid>
                             </CardBody>
-                        </Card> */}
+                        </Card>
 
                     </CardBody>
                 </Card>
