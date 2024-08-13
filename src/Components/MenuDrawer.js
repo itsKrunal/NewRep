@@ -112,7 +112,7 @@ const MenuDrawer = () => {
                                 </MenuButton>
                                 <MenuList>
                                     {reportRights && reportRights.ppc == 1 && <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
-                                    {reportRights && reportRights.finance == 1 && <MenuItem onClick={()=> router.push('reports/finance-form')} icon={<FaDollarSign />}>Finance</MenuItem>}
+                                    {reportRights && reportRights.finance == 1 && <MenuItem onClick={()=> router.replace('reports/finance-form')} icon={<FaDollarSign />}>Finance</MenuItem>}
                                     {reportRights && reportRights.survey == 1 && <Menu>
                                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" variant={'outline'} border={'1px solid white'} justifyContent="space-between" >
                                             <HStack spacing={2}>
@@ -121,8 +121,8 @@ const MenuDrawer = () => {
                                             </HStack>
                                         </MenuButton>
                                         <MenuList>
-                                            {<MenuItem icon={<FaFileAlt />} onClick={() => { router.push('/reports/survey-report'); onClose() }}>Tabular Reports</MenuItem>}
-                                            {<MenuItem icon={<FaChartBar />} onClick={() => { router.push('/reports/survey-graphs'); onClose() }}>Analytical Report </MenuItem>}
+                                            {<MenuItem icon={<FaFileAlt />} onClick={() => { router.replace('/reports/survey-report'); onClose() }}>Tabular Reports</MenuItem>}
+                                            {<MenuItem icon={<FaChartBar />} onClick={() => { router.replace('/reports/survey-graphs'); onClose() }}>Analytical Report </MenuItem>}
                                         </MenuList>
                                     </Menu>}
                                 </MenuList>
@@ -132,7 +132,7 @@ const MenuDrawer = () => {
                                 width="full"
                                 justifyContent="space-between"
                                 colorScheme="green"
-                                onClick={() => { router.push('/survey-form'); onClose() }}
+                                onClick={() => { router.replace('/survey-form'); onClose() }}
                             >
                                 <HStack spacing={2}  align="center">
                                     <FaWpforms />
