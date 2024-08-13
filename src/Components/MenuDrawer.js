@@ -66,6 +66,7 @@ const MenuDrawer = () => {
 
     return (
         <Box position="relative" zIndex="overlay" backgroundColor={'green.100'}>
+            {console.log("ROLEEEEE", isAdmin)}
             <IconButton
                 icon={<AiOutlineMenu />}
                 onClick={onOpen}
@@ -96,7 +97,7 @@ const MenuDrawer = () => {
                                         <Text>Users</Text>
                                     </HStack>
                                 </MenuButton>
-                                {isAdmin == 'Admin' && <MenuList>
+                                {isAdmin && <MenuList>
                                     <MenuItem icon={<FaUserPlus />} onClick={() => { onModalOpen(); onClose(); }}>New</MenuItem>
                                     <MenuItem icon={<FaUserEdit />} onClick={() => { onEditModalOpen(); onClose(); }}>Edit</MenuItem>
                                 </MenuList>}
