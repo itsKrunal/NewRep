@@ -10,36 +10,36 @@ export async function POST(request: NextRequest) {
         const body = await request.json(); // Parse the JSON request body
         console.log(body)
 
-        const token = request.cookies.get('token')?.value || '';
-        //@ts-ignore
-        const decodedToken = jwt.decode(token, 'PIKACHU');
+        // const token = request.cookies.get('token')?.value || '';
+        // //@ts-ignore
+        // const decodedToken = jwt.decode(token, 'PIKACHU');
 
-        // Create a new instance of the FinanceForm model with the data from the request body
-        //@ts-ignore
-        const newFinanceForm = new FinanceForm({
-            project: body.project,
-            h1: body.h1,
-            h2: body.h2,
-            //@ts-ignore
-            userId: decodedToken.user._id,
-            //@ts-ignore
-            eId: decodedToken.user.eId,
-            period: body.period,
-            organisation: body.organisation,
-            division: body.division,
-            partner: body.partner,
-            projectType: body.projectType,
-            actualBudget: body.actualBudget,
-            planBudget: body.planBudget,
-            pMonth: body.pMonth,
-            pQuarter: body.pQuarter,
-            pHalfYear: body.pHalfYear,
-            pFinancialYear: body.pFinancialYear,
-            pCalendarYear: body.pCalendarYear,
-        });
+        // // Create a new instance of the FinanceForm model with the data from the request body
+        // //@ts-ignore
+        // const newFinanceForm = new FinanceForm({
+        //     project: body.project,
+        //     h1: body.h1,
+        //     h2: body.h2,
+        //     //@ts-ignore
+        //     userId: decodedToken.user._id,
+        //     //@ts-ignore
+        //     eId: decodedToken.user.eId,
+        //     period: body.period,
+        //     organisation: body.organisation,
+        //     division: body.division,
+        //     partner: body.partner,
+        //     projectType: body.projectType,
+        //     actualBudget: body.actualBudget,
+        //     planBudget: body.planBudget,
+        //     pMonth: body.pMonth,
+        //     pQuarter: body.pQuarter,
+        //     pHalfYear: body.pHalfYear,
+        //     pFinancialYear: body.pFinancialYear,
+        //     pCalendarYear: body.pCalendarYear,
+        // });
 
-        // Save the form data to MongoDB
-        await newFinanceForm.save();
+        // // Save the form data to MongoDB
+        // await newFinanceForm.save();
 
         // Respond with a success message
         return NextResponse.json({ message: "Finance form saved successfully" }, { status: 201 });

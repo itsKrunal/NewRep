@@ -1,0 +1,96 @@
+Project:
+
+Enter the name of the project.
+• H1: (Top-level Categories)
+
+  • COGS
+  • Other Direct Costs
+  • Overheads (HO)
+  • Revenue
+  • H2: (Sub-categories based on H1)
+
+If H1 is "COGS":
+
+ • Material
+ • WO - SubContracting Cost
+ • Manpower
+ • Manpower (Off-role)
+ 
+If H1 is "Other Direct Costs":
+
+ • Project E&M
+ • Tour & Travelling Expenses
+ • Facilities
+ • Freight & Logistics
+ • G&A
+ • HR - Others
+ • Power & Fuel
+
+If H1 is "Overheads (HO)":
+
+ • Consultant Cost
+ • Employee Cost
+ • Facilities
+ • G&A
+ • HR - Others
+ • Insurance & Others
+ • Marketing & Promotion
+ • Tech & IT Infra
+
+If H1 is "Revenue":
+
+ • Revenue
+
+Period:
+ • Must be in YYYYMM format (e.g., 202401 for January 2024).
+
+Organisation:
+
+ • Desire
+ • PMC
+
+Division:
+
+ • Solar
+ • EPC
+ • ESCO
+ • RO
+ • Revenue
+• Others
+
+Partner:
+ • Desire
+ • Duke
+ • GA
+ • New
+ • Other
+ • Toran
+
+Project Type:
+
+ • Execution
+ • O&M
+ • OTH
+
+Actual Budget:
+Enter the actual budget amount (numeric value).
+
+Planned Budget:
+Enter the planned budget amount (numeric value).
+Period Details:
+
+Period - Month:
+
+Must be in YYYYMM format (e.g., 202401 for January 2024).
+Period - Quarter:
+
+Must be in FYxxQx format (e.g., FY24Q1 for the first quarter of fiscal year 2024).
+Period - Half Year:
+
+Must be in FYxxHx format (e.g., FY24H1 for the first half of fiscal year 2024).
+Period - Financial Year:
+
+Must be in FYxx format (e.g., FY24 for the fiscal year 2024).
+Period - Calendar Year:
+
+Must be in YYYY format (e.g., 2024).

@@ -14,11 +14,16 @@ import {
   Flex,
   FormErrorMessage,
   useToast,
+  Text,
+  Divider,
 } from "@chakra-ui/react";
+import { FaFileUpload, FaFileExcel, FaCheck } from "react-icons/fa";
+import * as XLSX from 'xlsx';
 import CustomHeading from "../../../../StyleComponents/PageHeader";
 import axios from "axios";
 
 const Page = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     project: "",
     h1: "",
@@ -38,6 +43,59 @@ const Page = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+
+  const handleFileUpload = async () => {
+    if (!file) {
+      toast({
+        title: "No file selected!",
+        description: "Please select an Excel file to upload.",
+        status: "error",
+        position: "top-right",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      try {
+        setLoading(true)
+        const response = await axios.post("/api/importFinanceData", jsonData);
+        toast({
+          title: "Success!",
+          description: "Excel data has been imported successfully.",
+          status: "success",
+          position: "top-right",
+        });
+        console.log("Excel data imported:", response.data);
+      } catch (error) {
+        console.error("Failed to import Excel data", error);
+        toast({
+          title: "Error",
+          description: "Failed to import Excel data.",
+          status: "error",
+          position: "top-right",
+        });
+      } finally {
+        setLoading(false)
+        setFile(null)
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
 
   const toast = useToast()
   const handleChange = (e) => {
@@ -113,6 +171,7 @@ const Page = () => {
   const handleSubmit = async () => {
     if (isFormValid()) {
       try {
+        setLoading(true);
 
         let missingFields = [];
 
@@ -161,10 +220,10 @@ const Page = () => {
           pCalendarYear: "",
         })
         toast({
-          title : "Sucess",
-          description : "Your response has been saved successfully",
-          position : 'top-right',
-          status : 'success'
+          title: "Sucess",
+          description: "Your response has been saved successfully",
+          position: 'top-right',
+          status: 'success'
         })
 
         console.log("Form submitted successfully", response.data);
@@ -172,20 +231,31 @@ const Page = () => {
       } catch (error) {
         console.error("Failed to submit form", error.response?.data || error.message);
         // Handle error, show error message, etc.
+      } finally {
+        setErrors({})
+        setLoading(false)
       }
     }
   };
 
   return (
-    <Box p={4} bg={"green.50"} height={"100vh"} w={"100%"}>
-      <VStack spacing={6} align="stretch" mt={"3.5em"}>
+    <Box p={[2, 4]} bg={"green.50"} minHeight={"100vh"} w={"100%"}>
+      <VStack spacing={[4, 6]} align="stretch" mt={["2em", "3.5em"]}>
         <Card boxShadow={"lg"}>
           <CardHeader>
             <CustomHeading prop={"Finance Form"} />
           </CardHeader>
           <CardBody>
-            <Flex display={'flex'} alignItems={'center'} boxShadow={'lg'} justifyContent={'center'}>
-              <VStack w={'60%'} spacing={4} boxShadow={'lg'}  p={5}>
+            <Flex direction={["column", "row"]}
+              alignItems={"center"}
+              justifyContent={"center"}
+              boxShadow={"lg"}
+              pb={["10px", "20px"]}
+            >
+              <VStack w={["100%", "60%"]}
+                spacing={4}
+                boxShadow="0px 8px 16px rgba(0, 128, 0, 0.2)"
+                p={[3, 5]}>
                 <FormControl isInvalid={!!errors.project}>
                   <FormLabel>Project</FormLabel>
                   <Input
@@ -196,9 +266,10 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.project}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl>
-                  <FormLabel>H1</FormLabel>
+                  <FormLabel >H1</FormLabel>
                   <Select
                     name="h1"
                     value={formData.h1}
@@ -211,6 +282,7 @@ const Page = () => {
                     <option value="Revenue">Revenue</option>
                   </Select>
                 </FormControl>
+                <Divider />
 
                 <FormControl>
                   <FormLabel>H2</FormLabel>
@@ -256,6 +328,7 @@ const Page = () => {
                     )}
                   </Select>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.period}>
                   <FormLabel>Period</FormLabel>
@@ -267,6 +340,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.period}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.organisation}>
                   <FormLabel>Organisation</FormLabel>
@@ -281,6 +355,7 @@ const Page = () => {
                   </Select>
                   <FormErrorMessage>{errors.organisation}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.division}>
                   <FormLabel>Division</FormLabel>
@@ -299,6 +374,7 @@ const Page = () => {
                   </Select>
                   <FormErrorMessage>{errors.division}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl>
                   <FormLabel>Partner</FormLabel>
@@ -316,6 +392,7 @@ const Page = () => {
                     <option value="Toran">Toran</option>
                   </Select>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.projectType}>
                   <FormLabel>Project Type</FormLabel>
@@ -331,6 +408,7 @@ const Page = () => {
                   </Select>
                   <FormErrorMessage>{errors.projectType}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.actualBudget}>
                   <FormLabel>Actual Budget</FormLabel>
@@ -342,6 +420,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.actualBudget}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.planBudget}>
                   <FormLabel>Planned Budget</FormLabel>
@@ -353,6 +432,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.planBudget}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.pMonth}>
                   <FormLabel>Period - Month</FormLabel>
@@ -364,6 +444,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.pMonth}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.pQuarter}>
                   <FormLabel>Period - Quarter</FormLabel>
@@ -375,6 +456,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.pQuarter}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.pHalfYear}>
                   <FormLabel>Period - Half Year</FormLabel>
@@ -386,6 +468,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.pHalfYear}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.pFinancialYear}>
                   <FormLabel>Period - Financial Year</FormLabel>
@@ -397,6 +480,7 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.pFinancialYear}</FormErrorMessage>
                 </FormControl>
+                <Divider />
 
                 <FormControl isInvalid={!!errors.pCalendarYear}>
                   <FormLabel>Period - Calendar Year</FormLabel>
@@ -408,11 +492,61 @@ const Page = () => {
                   />
                   <FormErrorMessage>{errors.pCalendarYear}</FormErrorMessage>
                 </FormControl>
-                <Flex w={'100%'} mt={5} justifyContent={'flex-end'}> 
-                <Button colorScheme="green" onClick={handleSubmit}>
-                  Submit
-                </Button>
+                <Divider mt={2} />
+
+                <Flex w={'100%'} mt={10} alignContent={'center'} justifyContent={'flex-start'}>
+                  <Box>
+                    <Text fontSize="md" color="gray.600">
+                      {file ? `Selected File: ${file.name}` : 'No file chosen'}
+                    </Text>
+                  </Box>
                 </Flex>
+                <Flex w="100%" justifyContent="space-between" direction={["column", "row"]} alignItems="center">
+                  <Flex direction="row" alignItems="center" mb={4}>
+                    <Input
+                      type="file"
+                      accept="*"
+                      onChange={handleFileChange}
+                      display="none"
+                      id="file-upload"
+                    />
+                    <Button
+                      as="label"
+                      htmlFor="file-upload"
+                      leftIcon={<FaFileExcel />}
+                      colorScheme="green"
+                      variant="outline"
+                      mr={4}
+                      size="md"
+                    >
+                      Choose Excel File
+                    </Button>
+
+                    <Button
+                      colorScheme="green"
+                      onClick={handleFileUpload}
+                      leftIcon={<FaFileUpload />}
+                      variant="solid"
+                      ml={4}
+                      size="md"
+                      isLoading={loading}
+                    >
+                      Import Data
+                    </Button>
+                  </Flex>
+                  <Button
+                    colorScheme="green"
+                    isLoading={loading}
+
+                    onClick={handleSubmit}
+                    leftIcon={<FaCheck />}
+                    variant="solid"
+                    size="md"
+                  >
+                    Submit
+                  </Button>
+                </Flex>
+
               </VStack>
             </Flex>
           </CardBody>
