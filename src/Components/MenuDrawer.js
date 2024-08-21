@@ -27,6 +27,8 @@ import { FaProjectDiagram, FaUsers, FaFileAlt, FaWpforms, FaUserPlus, FaUserEdit
 import { AiOutlineMenu } from "react-icons/ai";
 import UserModalAdd from '../Components/UserModalAdd';
 import EditUserModal from '../Components/EditUserModal';
+import FeatureStatusModal from '../Components/FeatureStatusModal';
+import NewFeature from '../Components/NewFeature';
 import { useSelector } from "react-redux";
 import { MdHelp } from "react-icons/md";
 
@@ -42,6 +44,19 @@ const MenuDrawer = () => {
         onOpen: onModalOpen,
         onClose: onModalClose
     } = useDisclosure();
+
+    const {
+        isOpen: isFeatureStatusModalOpen,
+        onOpen: onFeatureStatusModalOpen,
+        onClose: onFeatureStatusModalClose
+    } = useDisclosure();
+
+    const {
+        isOpen: isFeatureModalOpen,
+        onOpen: onFeatureModalOpen,
+        onClose: onFeatureModalClose
+    } = useDisclosure();
+
 
     const {
         isOpen: isEditModalOpen,
@@ -156,8 +171,8 @@ const MenuDrawer = () => {
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem icon={<FaUserPlus />}>New</MenuItem>
-                                    <MenuItem icon={<FaUserEdit />}>Status</MenuItem>
+                                    <MenuItem icon={<FaUserPlus />} onClick={() => { onFeatureModalOpen(); onClose(); }}>New</MenuItem>
+                                    <MenuItem icon={<FaUserEdit />} onClick={()=> {onFeatureStatusModalOpen(); onClose();}}>Status</MenuItem>
                                 </MenuList>
                             </Menu>
                         </VStack>
@@ -166,6 +181,8 @@ const MenuDrawer = () => {
             </Drawer>
             <EditUserModal isOpen={isEditModalOpen} onClose={onEditModalClose} />
             <UserModalAdd isOpen={isModalOpen} onClose={onModalClose} />
+            <NewFeature isOpen={isFeatureModalOpen} onClose={onFeatureModalClose} />
+            {/* <FeatureStatusModal isOpen={isFeatureStatusModalOpen} onClose={onFeatureStatusModalClose} /> */}
         </Box>
     );
 };
