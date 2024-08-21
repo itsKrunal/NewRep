@@ -21,15 +21,14 @@ import {
     Text,
     HStack,
     Divider,
-    useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { FaProjectDiagram, FaUsers, FaFileAlt, FaWpforms, FaUserPlus, FaUserEdit, FaChartBar, FaDollarSign } from 'react-icons/fa';
+import { FaProjectDiagram, FaUsers, FaFileAlt, FaWpforms, FaUserPlus, FaUserEdit, FaChartBar, FaDollarSign, FaClipboardList, FaMoneyCheckAlt } from 'react-icons/fa';
 import { AiOutlineMenu } from "react-icons/ai";
-import UserModalAdd from '../Components/UserModalAdd'
-import EditUserModal from '../Components/EditUserModal'
+import UserModalAdd from '../Components/UserModalAdd';
+import EditUserModal from '../Components/EditUserModal';
 import { useSelector } from "react-redux";
-import { MdHelp, MdRequestPage } from "react-icons/md";
+import { MdHelp } from "react-icons/md";
 
 const MenuDrawer = () => {
     const user = useSelector((state) => state.user);
@@ -50,19 +49,18 @@ const MenuDrawer = () => {
         onClose: onEditModalClose
     } = useDisclosure();
 
-
     useEffect(() => {
         fetchRights();
-    }, [user])
+    }, [user]);
 
     useEffect(() => {
-        console.log("RIGHTS", reportRights)
-    }, [reportRights])
+        console.log("RIGHTS", reportRights);
+    }, [reportRights]);
 
     const fetchRights = () => {
-        setIsAdmin(user.role == 'Admin')
-        setReportRights(user.reportsRight)
-    }
+        setIsAdmin(user.role === 'Admin');
+        setReportRights(user.reportsRight);
+    };
 
     return (
         <Box position="relative" zIndex="overlay" backgroundColor={'green.100'}>
@@ -90,8 +88,9 @@ const MenuDrawer = () => {
                     </DrawerHeader>
                     <DrawerBody p={4}>
                         <VStack align="start" spacing={4} width="full">
+                            {/* Users Section */}
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between">
                                     <HStack spacing={2}>
                                         <FaUsers />
                                         <Text>Users</Text>
@@ -103,45 +102,54 @@ const MenuDrawer = () => {
                                 </MenuList>}
                             </Menu>
                             <Divider />
+
+                            {/* Reports Section */}
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between">
                                     <HStack spacing={2}>
                                         <FaFileAlt />
                                         <Text>Reports</Text>
                                     </HStack>
                                 </MenuButton>
                                 <MenuList>
-                                    {reportRights && reportRights.ppc == 1 && <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
-                                    {reportRights && reportRights.finance == 1 && <MenuItem onClick={()=> router.replace('reports/finance-form')} icon={<FaDollarSign />}>Finance</MenuItem>}
-                                    {reportRights && reportRights.survey == 1 && <Menu>
-                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" variant={'outline'} border={'1px solid white'} justifyContent="space-between" >
-                                            <HStack spacing={2}>
-                                                <FaFileAlt />
-                                                <Text>Survey</Text>
-                                            </HStack>
-                                        </MenuButton>
-                                        <MenuList>
-                                            {<MenuItem icon={<FaFileAlt />} onClick={() => { router.replace('/reports/survey-report'); onClose() }}>Tabular Reports</MenuItem>}
-                                            {<MenuItem icon={<FaChartBar />} onClick={() => { router.replace('/reports/survey-graphs'); onClose() }}>Analytical Report </MenuItem>}
-                                        </MenuList>
-                                    </Menu>}
+                                    {reportRights && reportRights.ppc === 1 && <MenuItem icon={<FaChartBar />}>PPC</MenuItem>}
+                                    {reportRights && reportRights.finance === 1 && <MenuItem onClick={() => router.replace('reports/finance-reports')} icon={<FaDollarSign />}>Finance</MenuItem>}
+                                    {reportRights && reportRights.survey === 1 && (
+                                        <Menu>
+                                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" variant={'outline'} border={'1px solid white'} justifyContent="space-between">
+                                                <HStack spacing={2}>
+                                                    <FaFileAlt />
+                                                    <Text>Survey</Text>
+                                                </HStack>
+                                            </MenuButton>
+                                            <MenuList>
+                                                <MenuItem icon={<FaFileAlt />} onClick={() => { router.replace('/reports/survey-report'); onClose(); }}>Tabular Reports</MenuItem>
+                                                <MenuItem icon={<FaChartBar />} onClick={() => { router.replace('/reports/survey-graphs'); onClose(); }}>Analytical Report</MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    )}
                                 </MenuList>
                             </Menu>
                             <Divider />
-                            <Button
-                                width="full"
-                                justifyContent="space-between"
-                                colorScheme="green"
-                                onClick={() => { router.replace('/survey-form'); onClose() }}
-                            >
-                                <HStack spacing={2}  align="center">
-                                    <FaWpforms />
-                                    <Text>Survey Form</Text>
-                                </HStack>
-                            </Button>
-                            <Divider />
+
+                            {/* Forms Section */}
                             <Menu>
-                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between" >
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between">
+                                    <HStack spacing={2}>
+                                        <FaWpforms />
+                                        <Text>Forms</Text>
+                                    </HStack>
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuItem icon={<FaClipboardList />} onClick={() => { router.replace('/survey-form'); onClose(); }}>Survey Form</MenuItem>
+                                    <MenuItem icon={<FaMoneyCheckAlt />} onClick={() => { router.replace('/reports/finance-form'); onClose(); }}>Finance Form</MenuItem>
+                                </MenuList>
+                            </Menu>
+                            <Divider />
+
+                            {/* Feature Request Section */}
+                            <Menu>
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between">
                                     <HStack spacing={2}>
                                         <MdHelp />
                                         <Text>Feature Request</Text>
