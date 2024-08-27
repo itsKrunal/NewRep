@@ -47,6 +47,7 @@ const featureSchema = new Schema(
             type : String,
             enum : ['pending', 'approved', 'hold']
         },
+        department : String,
         hodRemarks : String
     },
     {

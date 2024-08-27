@@ -42,6 +42,13 @@ const userSchema = new Schema(
       type: String,
       enum: ['Operator', 'Admin'],
       default: 'Operator'
+    },
+    isHOD : {
+      type : Boolean,
+      default : false
+    },
+    hodDepartments : {
+      type : Array
     }
   },
   {

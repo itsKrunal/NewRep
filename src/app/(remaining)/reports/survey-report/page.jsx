@@ -6,29 +6,22 @@ import * as XLSX from "xlsx";
 import {
   Box,
   Button,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Heading,
-  useToast,
-  VStack,
-  IconButton,
-  useDisclosure,
-  CardHeader,
   Card,
+  CardHeader,
   CardBody,
+  VStack,
+  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { Table, Pagination } from "antd";
 import CustomHeading from "@/StyleComponents/PageHeader";
 
 const Page = () => {
   const [surveys, setSurveys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const toast = useToast();
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     fetchData();
@@ -65,6 +58,29 @@ const Page = () => {
     XLSX.writeFile(wb, "surveys.xlsx");
   };
 
+  const columns = [
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'Department', dataIndex: 'department', key: 'department' },
+    { title: 'Metric', dataIndex: 'metric', key: 'metric' },
+    { title: 'Field', dataIndex: 'field', key: 'field' },
+    { title: 'Value', dataIndex: 'value', key: 'value' },
+  ];
+
+  const dataSource = surveys.flatMap(survey => {
+    const { email, department, ...metrics } = survey;
+    return Object.entries(metrics).map(([field, value]) => {
+      const metric = field.match(/(trust|respect|fairness|camaraderie|pride)/i)?.[0];
+      return metric ? {
+        key: `${email}-${field}`,
+        email,
+        department,
+        metric: metric.toUpperCase(),
+        field,
+        value,
+      } : null;
+    }).filter(item => item);
+  });
+
   return (
     <Box p={4} bg={"green.50"} height={'100vh'} w={'100%'}>
       <VStack spacing={6} align="stretch" mt={'3.5em'}>
@@ -75,34 +91,19 @@ const Page = () => {
           <CardBody>
             <Card boxShadow={'0px 4px 6px rgba(0, 0, 0.2, 0.3)'} p={3}>
               <Box overflowX="auto">
-                <Table variant="striped" size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th>Email</Th>
-                      <Th>Department</Th>
-                      <Th>Metric</Th>
-                      <Th>Field</Th>
-                      <Th>Value</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {surveys.flatMap(survey => {
-                      const { email, department, ...metrics } = survey;
-                      return Object.entries(metrics).map(([field, value]) => {
-                        const metric = field.match(/(trust|respect|fairness|camaraderie|pride)/i)?.[0];
-                        return metric ? (
-                          <Tr key={`${email}-${field}`}>
-                            <Td>{email}</Td>
-                            <Td>{department}</Td>
-                            <Td>{metric.toUpperCase()}</Td>
-                            <Td>{field}</Td>
-                            <Td>{value}</Td>
-                          </Tr>
-                        ) : null;
-                      });
-                    })}
-                  </Tbody>
-                </Table>
+                <Table
+                  dataSource={dataSource}
+                  columns={columns}
+                  pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    onChange: (page, size) => {
+                      setCurrentPage(page);
+                      setPageSize(size);
+                    },
+                    showSizeChanger: true,
+                  }}
+                />
               </Box>
               <Button w={'max-content'} mt={5} colorScheme="green" onClick={handleExport}>
                 Export to Excel

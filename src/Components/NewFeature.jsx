@@ -27,6 +27,7 @@ import { FaIdBadge } from "react-icons/fa";
 const NewFeature = ({ isOpen, onClose }) => {
     const user = useSelector((state) => state.user);
     const [userInfo, setUserInfo] = useState({});
+    const [loading, setLoading] = useState(false);
     const toast = useToast();
     const [formData, setFormData] = useState({
         featureTitle: '',
@@ -59,6 +60,7 @@ const NewFeature = ({ isOpen, onClose }) => {
     };
 
     const handleSubmit = async () => {
+    
         const { featureTitle, featureDescription, priorityLevel, justification, targetCompletionDate, remarks } = formData;
         if (!featureTitle || !featureDescription || !priorityLevel || !justification || !targetCompletionDate || !remarks) {
             toast({
@@ -67,14 +69,16 @@ const NewFeature = ({ isOpen, onClose }) => {
                 status: "error",
                 duration: 5000,
                 isClosable: true,
+                position : 'top-right'
             });
             return;
         }
 
         try {
+            setLoading(true)
             // Create a FormData object
             const formDataToSubmit = new FormData();
-            
+
             // Append form data fields
             formDataToSubmit.append('featureTitle', formData.featureTitle);
             formDataToSubmit.append('featureDescription', formData.featureDescription);
@@ -83,22 +87,24 @@ const NewFeature = ({ isOpen, onClose }) => {
             formDataToSubmit.append('targetCompletionDate', formData.targetCompletionDate);
             formDataToSubmit.append('remarks', formData.remarks);
             formDataToSubmit.append('eId', userInfo.eId); // Ensure you include user information
-            
+            formDataToSubmit.append('department', userInfo.department); // Ensure you include user information
+
+
             // Append file if available
             if (formData.attachments) {
                 formDataToSubmit.append('attachments', formData.attachments);
             }
-            
+
             // Send a POST request to the API endpoint
             const response = await axios.post('/api/addFeature', formDataToSubmit, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            
+
             // Handle the response
             console.log("Server Response:", response.data);
-        
+
             setFormData({
                 featureTitle: '',
                 featureDescription: '',
@@ -109,13 +115,15 @@ const NewFeature = ({ isOpen, onClose }) => {
                 remarks: ''
             });
             onClose(); // Close the modal
-    
+
         } catch (error) {
             console.error("Error submitting feature request:", error);
             // Handle error appropriately
+        } finally {
+            setLoading(false)
         }
     }
-    
+
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -151,6 +159,20 @@ const NewFeature = ({ isOpen, onClose }) => {
                                 readOnly
                                 placeholder="Enter Employee Name"
                                 value={userInfo.userName}
+                            />
+                        </FormControl>
+                        <Divider />
+                        <FormControl borderColor={'green.200'}>
+                            <FormLabel>
+                                <HStack spacing={2}>
+                                    <Icon as={FaIdBadge} />
+                                    <span>Department</span>
+                                </HStack>
+                            </FormLabel>
+                            <Input
+                                readOnly
+                                placeholder="Enter Employee Name"
+                                value={userInfo.department}
                             />
                         </FormControl>
                         <Divider />
@@ -209,9 +231,11 @@ const NewFeature = ({ isOpen, onClose }) => {
                             <Input
                                 type="file"
                                 name="attachments"
+                                accept="image/*,application/pdf"
                                 onChange={handleFileChange}
                             />
                         </FormControl>
+
                         <FormControl borderColor={'green.200'}>
                             <FormLabel>Remarks</FormLabel>
                             <Textarea
@@ -225,7 +249,7 @@ const NewFeature = ({ isOpen, onClose }) => {
                 </ModalBody>
                 <ModalFooter>
                     <HStack spacing={4}>
-                        <Button colorScheme="green" onClick={handleSubmit}>Submit</Button>
+                        <Button colorScheme="green" isLoading={loading} onClick={handleSubmit}>Submit</Button>
                         <Button onClick={onClose}>Cancel</Button>
                     </HStack>
                 </ModalFooter>

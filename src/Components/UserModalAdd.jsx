@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import axios from 'axios';
 import {
@@ -25,7 +26,7 @@ import {
 import { FaUser, FaIdBadge, FaBuilding, FaClipboardList, FaCheckCircle } from "react-icons/fa";
 import departments from '../Utils/departments';
 import { EmailIcon } from "@chakra-ui/icons";
-
+import validatePayload from 'z-validify'
 const UserAddModal = ({ isOpen, onClose }) => {
     const [eId, setErpId] = useState('');
     const [userName, setUserName] = useState('');
@@ -33,6 +34,8 @@ const UserAddModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [reportAccess, setReportAccess] = useState([]);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isHOD, setIsHOD] = useState(false);
+    const [hodDepartments, setHodDepartments] = useState([]);
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
@@ -48,7 +51,7 @@ const UserAddModal = ({ isOpen, onClose }) => {
             });
             return;
         }
-        
+
         if (!email.includes('desireenergy.com')) {
             toast({
                 title: "Invalid email",
@@ -94,15 +97,24 @@ const UserAddModal = ({ isOpen, onClose }) => {
                 finance: reportAccess.includes("finance") ? 1 : 0,
                 ppc: reportAccess.includes("ppc") ? 1 : 0,
                 survey: reportAccess.includes("survey") ? 1 : 0,
-            }
+            },
+            isAdmin,
+            isHOD,
+            hodDepartments: isHOD ? hodDepartments : []
         };
-
-        if (isAdmin) {
-            userData.role = 'Admin';
-        }
 
         try {
             setLoading(true);
+            const { isValid, message } = validatePayload(userData);
+            if (!isValid) {
+                toast({
+                    title: "Invalid Data",
+                    description: message,
+                    status: 'error',
+                    position: 'top-right',
+                    duration: 3000
+                })
+            }
             await axios.post('/api/addMainUser', userData);
             toast({
                 title: "User created.",
@@ -130,6 +142,8 @@ const UserAddModal = ({ isOpen, onClose }) => {
             setReportAccess([]);
             setEmail('');
             setIsAdmin(false);
+            setIsHOD(false);
+            setHodDepartments([]);
             setLoading(false);
         }
     };
@@ -249,6 +263,44 @@ const UserAddModal = ({ isOpen, onClose }) => {
                                 Admin
                             </Checkbox>
                         </FormControl>
+                        <Divider />
+                        <FormControl borderColor={'green.200'}>
+                            <FormLabel>
+                                <HStack spacing={2}>
+                                    <Icon as={FaCheckCircle} />
+                                    <span>Head of Department (HOD)</span>
+                                </HStack>
+                            </FormLabel>
+                            <Checkbox
+                                colorScheme="green"
+                                isChecked={isHOD}
+                                onChange={(e) => setIsHOD(e.target.checked)}
+                            >
+                                HOD
+                            </Checkbox>
+                        </FormControl>
+                        {isHOD && (
+                            <FormControl borderColor={'green.200'}>
+                                <FormLabel>
+                                    <HStack spacing={2}>
+                                        <Icon as={FaBuilding} />
+                                        <span>Select HOD Departments</span>
+                                    </HStack>
+                                </FormLabel>
+                                <CheckboxGroup
+                                    value={hodDepartments}
+                                    onChange={setHodDepartments}
+                                >
+                                    <Stack spacing={2} direction="column">
+                                        {departments.map(dept => (
+                                            <Checkbox key={dept} value={dept} colorScheme="green">
+                                                {dept}
+                                            </Checkbox>
+                                        ))}
+                                    </Stack>
+                                </CheckboxGroup>
+                            </FormControl>
+                        )}
                     </VStack>
                 </ModalBody>
                 <ModalFooter>

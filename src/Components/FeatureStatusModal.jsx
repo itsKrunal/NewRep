@@ -1,142 +1,99 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    Divider,
-    Box,
-    Text,
-    Badge,
-    Stack,
-    Center,
-    VStack,
-    HStack,
-    Flex,
-} from "@chakra-ui/react";
+import { Table, Tag } from "antd";
+import { Modal, useToast, Box, Divider, Text, ModalBody, ModalContent, ModalHeader, ModalCloseButton } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
 const FeatureStatusModal = ({ isOpen, onClose }) => {
     const user = useSelector((state) => state.user);
     const [features, setFeatures] = useState([]);
+    const toast = useToast();
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        // Call fetchData only when the modal is opened
+        if (isOpen) {
+            fetchData();
+        }
+    }, [isOpen]);
 
     const fetchData = async () => {
         try {
-            const { data } = await axios.get("/api/getFeatures");
+            const { data } = await axios.get("/api/getMyFeature");
             const sortedFeatures = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             setFeatures(sortedFeatures);
         } catch (error) {
+            toast({
+                title: 'Error Fetching Data',
+                description: 'There was an error fetching the features data. Please try again later.',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'top-right'
+            });
             console.error("Error fetching features:", error);
         }
     };
 
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'featureTitle',
+            key: 'featureTitle',
+            render: text => <Text fontWeight="bold">{text}</Text>,
+        },
+        {
+            title: 'Read',
+            dataIndex: 'isRead',
+            key: 'isRead',
+            render: isRead => (
+                <Tag color={isRead ? "blue" : "gray"}>
+                    {isRead ? "Read" : "Unread"}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: status => {
+                const color = status === "approved" ? "green" : status === "hold" ? "yellow" : "red";
+                return <Tag color={color}>{status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Pending'}</Tag>;
+            },
+        },
+        {
+            title: 'Date Created',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: date => moment(date).format("MMM DD, YYYY [at] h:mm A"),
+        },
+    ];
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="lg">
-            <ModalOverlay />
-            <ModalContent>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="xl"
+            isCentered
+            closeOnOverlayClick={false}
+        >
+            <ModalContent boxShadow="0 0 10px 2px rgba(0, 0, 0, 0.2)" >
+
                 <ModalHeader>Feature Status</ModalHeader>
-                <Divider />
                 <ModalCloseButton />
                 <ModalBody>
-                    {features.length > 0 ? (
-                        <Stack spacing={4}>
-                            {features.map((feature) => {
-                                const featureStatus = feature.status || "pending"; // Default to "pending" if status is not present
-                                const formattedDate = moment(feature.createdAt).format("MMM DD, YYYY [at] h:mm A");
-
-                                return (
-                                    <Box
-                                        key={feature._id}
-                                        p={4}
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        bg={feature.isRead ? "gray.50" : "white"}
-                                        boxShadow="sm"
-                                        transition="background 0.3s ease"
-                                        _hover={{ bg: "gray.100" }}
-                                    >
-                                        <VStack align="start" spacing={3}>
-                                            <Flex w={'100%'} justifyContent={'space-between'}>
-                                                <Box>
-                                                    <Text fontSize="md" color="gray.600" mb={1}>
-                                                        Title:
-                                                    </Text>
-                                                    <Text fontSize="lg" fontWeight="bold">
-                                                        {feature.featureTitle}
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Badge
-                                                        colorScheme={
-                                                            featureStatus === "approved"
-                                                                ? "green"
-                                                                : featureStatus === "hold"
-                                                                    ? "yellow"
-                                                                    : "red"
-                                                        }
-                                                    >
-                                                        {featureStatus.charAt(0).toUpperCase() + featureStatus.slice(1)}
-                                                    </Badge>
-                                                </Box>
-                                            </Flex>
-                                            <Divider />
-                                            <HStack spacing={4}>
-                                                {/* <Box>
-                                                    <Text fontSize="md" color="gray.600" mb={1}>
-                                                        Status:
-                                                    </Text>
-                                                    <Badge
-                                                        colorScheme={
-                                                            featureStatus === "approved"
-                                                                ? "green"
-                                                                : featureStatus === "hold"
-                                                                    ? "yellow"
-                                                                    : "red"
-                                                        }
-                                                    >
-                                                        {featureStatus.charAt(0).toUpperCase() + featureStatus.slice(1)}
-                                                    </Badge>
-                                                </Box> */}
-                                                <Box>
-                                                    <Text fontSize="md" color="gray.600" mb={1}>
-                                                        Read:
-                                                    </Text>
-                                                    <Badge colorScheme={feature.isRead ? "blue" : "gray"}>
-                                                        {feature.isRead ? "Read" : "Unread"}
-                                                    </Badge>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontSize="md" color="gray.600" mb={1}>
-                                                        Date Created:
-                                                    </Text>
-                                                    <Text fontSize="sm" color="gray.500">
-                                                        {formattedDate}
-                                                    </Text>
-                                                </Box>
-                                            </HStack>
-                                        </VStack>
-                                    </Box>
-                                );
-                            })}
-                        </Stack>
-                    ) : (
-                        <Center py={6}>
-                            <Text>No feature requests available.</Text>
-                        </Center>
-                    )}
+                    <Box mb={4}>
+                        <Divider />
+                    </Box>
+                    <Table
+                        dataSource={features}
+                        columns={columns}
+                        rowKey="_id"
+                        pagination={false}
+                        bordered
+                        style={{marginBottom : '20px'}}
+                    />
                 </ModalBody>
-                <ModalFooter>
-                    {/* Add buttons or other controls here if needed */}
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );

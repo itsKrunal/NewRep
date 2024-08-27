@@ -8,7 +8,9 @@ export interface UsersState {
   reportsRight: Object,
   department: string,
   userName: string,
-  eId: string
+  eId: string,
+  isHOD : boolean,
+  hodDepartments : Array<String>
 }
 
 // Define the initial state using that type
@@ -22,6 +24,8 @@ const getInitialState = (): UsersState => {
       department: '',
       userName: '',
       eId: '',
+      isHOD : '',
+      hodDepartments : ''
     };
   } else {
     return {
@@ -31,6 +35,8 @@ const getInitialState = (): UsersState => {
       department: '',
       userName: '',
       eId: '',
+      isHOD : false,
+      hodDepartments : []
     };
   }
 }

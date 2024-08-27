@@ -11,17 +11,9 @@ export async function GET(request: NextRequest) {
         // Get user information
         const user = getMe(request);
 
-        console.log("USERERERER", user)
-
-        if (!user || !user.hodDepartments || !Array.isArray(user.hodDepartments)) {
-            return NextResponse.json({
-                error: 'Invalid user or user does not have HOD departments',
-            }, { status: 400 });
-        }
-
         // Find features where the department is included in the user's hodDepartments
         const data = await FeatureModel.find({
-            department: { $in: user.hodDepartments }
+            eId : user.eId
         });
 
         return NextResponse.json({

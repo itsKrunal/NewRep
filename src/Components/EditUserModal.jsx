@@ -25,12 +25,17 @@ import {
 import { FaUser, FaIdBadge, FaBuilding, FaClipboardList, FaCheckCircle } from "react-icons/fa";
 import departments from '../Utils/departments';
 import { EmailIcon } from "@chakra-ui/icons";
+import { useDispatch } from "react-redux";
+import { resetUser, setUser } from "@/lib/features/userSlice";
 
 const EditUserModal = ({ isOpen, onClose }) => {
+    const dispatch = useDispatch();
     const [selectedUserId, setSelectedUserId] = useState('');
     const [users, setUsers] = useState([]);
     const [userData, setUserData] = useState({});
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isHOD, setIsHOD] = useState(false); // State for HOD checkbox
+    const [hodDepartments, setHodDepartments] = useState([]); // State for HOD departments
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
@@ -39,10 +44,10 @@ const EditUserModal = ({ isOpen, onClose }) => {
             fetchUsers();
         }
     }, [isOpen]);
-    
-    useEffect(()=> {
-        setSelectedUserId('')
-    }, [onClose])
+
+    useEffect(() => {
+        setSelectedUserId('');
+    }, [onClose]);
 
     const fetchUsers = async () => {
         try {
@@ -60,9 +65,9 @@ const EditUserModal = ({ isOpen, onClose }) => {
         }
     };
 
-    useEffect(()=> {
-        console.log(userData)
-    }, [userData])
+    useEffect(() => {
+        console.log(userData);
+    }, [userData]);
 
     const handleUserSelect = (e) => {
         const userId = e.target.value;
@@ -81,6 +86,8 @@ const EditUserModal = ({ isOpen, onClose }) => {
                 ].filter(Boolean)
             });
             setIsAdmin(selectedUser.role === "Admin");
+            setIsHOD(selectedUser.isHOD);
+            setHodDepartments(selectedUser.hodDepartments || []); // Set HOD departments
         }
     };
 
@@ -129,12 +136,37 @@ const EditUserModal = ({ isOpen, onClose }) => {
                 ppc: userData.reportAccess.includes("ppc") ? 1 : 0,
                 survey: userData.reportAccess.includes("survey") ? 1 : 0,
             },
-            role: isAdmin ? "Admin" : undefined
+            role: isAdmin ? "Admin" : undefined,
+            isHOD,
+            hodDepartments: !isHOD ? [] : hodDepartments
         };
 
         try {
             setLoading(true);
-            await axios.post(`/api/updateUser`, updatedUserData);
+            const resp  = await axios.post(`/api/updateUser`, updatedUserData);
+            const user = resp.data.info;
+            console.log("PIKACHU", {
+                email: user.email,
+                role: user.role,
+                eId: user.eId,
+                userName: user.userName,
+                department: user.department,
+                reportsRight: user.reportsRight,
+                isHOD: user.isHOD ? user.isHOD : false,
+                hodDepartments: user.hodDepartments ? user.hodDepartments : []
+            })
+            dispatch(resetUser());
+            dispatch(setUser({
+                email: user.email,
+                role: user.role,
+                eId: user.eId,
+                userName: user.userName,
+                department: user.department,
+                reportsRight: user.reportsRight,
+                isHOD: user.isHOD ? user.isHOD : false,
+                hodDepartments: user.hodDepartments ? user.hodDepartments : []
+            }))
+
             toast({
                 title: "User updated.",
                 description: "The user has been updated successfully.",
@@ -158,6 +190,8 @@ const EditUserModal = ({ isOpen, onClose }) => {
             setSelectedUserId('');
             setUserData({});
             setIsAdmin(false);
+            setIsHOD(false);
+            setHodDepartments([]); // Reset HOD departments
             setLoading(false);
         }
     };
@@ -275,20 +309,60 @@ const EditUserModal = ({ isOpen, onClose }) => {
                                     <Checkbox
                                         colorScheme="green"
                                         isChecked={isAdmin}
-                                        onChange={(e) => setIsAdmin(e.target.checked)}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            setIsAdmin(checked);
+                                            if (!checked) setIsHOD(false); // Uncheck HOD if Admin is unchecked
+                                        }}
                                     >
                                         Admin
                                     </Checkbox>
                                 </FormControl>
+                                <FormControl borderColor={'green.200'}>
+                                    <FormLabel>
+                                        <HStack spacing={2}>
+                                            <Icon as={FaCheckCircle} />
+                                            <span>HOD</span>
+                                        </HStack>
+                                    </FormLabel>
+                                    <Checkbox
+                                        colorScheme="green"
+                                        isChecked={isHOD}
+                                        onChange={(e) => setIsHOD(e.target.checked)}
+                                    >
+                                        HOD
+                                    </Checkbox>
+                                </FormControl>
+                                {isHOD && (
+                                    <FormControl borderColor={'green.200'}>
+                                        <FormLabel>
+                                            <HStack spacing={2}>
+                                                <Icon as={FaBuilding} />
+                                                <span>Select HOD Departments</span>
+                                            </HStack>
+                                        </FormLabel>
+                                        <CheckboxGroup
+                                            value={hodDepartments}
+                                            onChange={setHodDepartments}
+                                        >
+                                            <Stack spacing={2} direction="column">
+                                                {departments.map(dept => (
+                                                    <Checkbox key={dept} value={dept} colorScheme="green">
+                                                        {dept}
+                                                    </Checkbox>
+                                                ))}
+                                            </Stack>
+                                        </CheckboxGroup>
+                                    </FormControl>
+                                )}
                             </>
                         )}
                     </VStack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme='green' isLoading={loading} mr={3} onClick={handleSave}>
+                    <Button colorScheme="green" isLoading={loading} onClick={handleSave}>
                         Save
                     </Button>
-                    <Button bg={'green.50'} onClick={onClose}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

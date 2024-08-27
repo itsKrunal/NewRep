@@ -31,7 +31,9 @@ export async function POST(request: NextRequest) {
             //@ts-ignore
             remarks : formData.get('remarks'),
             //@ts-ignore
-            eId : formData.get('eId')
+            eId : formData.get('eId'),
+            //@ts-ignore
+            department : formData.get('department')
         }
 
         await FeatureModel.create(obj);

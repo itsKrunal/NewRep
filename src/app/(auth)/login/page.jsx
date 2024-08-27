@@ -4,7 +4,6 @@ import { Box, Button, Input, Heading, Text, VStack, Flex, useToast, InputGroup, 
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-
 export default function Register() {
     const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');

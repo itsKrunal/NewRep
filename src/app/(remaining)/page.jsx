@@ -35,7 +35,9 @@ const Page = () => {
         eId : user.eId,
         userName : user.userName,
         department : user.department,
-        reportsRight : user.reportsRight
+        reportsRight : user.reportsRight,
+        isHOD : user.isHOD ? user.isHOD : false,
+        hodDepartments : user.hodDepartments ? user.hodDepartments : []
       }))
     } catch (error) {
       

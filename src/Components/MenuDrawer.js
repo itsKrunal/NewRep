@@ -37,6 +37,7 @@ const MenuDrawer = () => {
     const router = useRouter();
     const [reportRights, setReportRights] = useState([]);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isHod, setIsHod] = useState(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -74,6 +75,7 @@ const MenuDrawer = () => {
 
     const fetchRights = () => {
         setIsAdmin(user.role === 'Admin');
+        setIsHod(user.isHOD)
         setReportRights(user.reportsRight);
     };
 
@@ -175,6 +177,18 @@ const MenuDrawer = () => {
                                     <MenuItem icon={<FaUserEdit />} onClick={()=> {onFeatureStatusModalOpen(); onClose();}}>Status</MenuItem>
                                 </MenuList>
                             </Menu>
+                            <Divider />
+                            {isHod && <Menu>
+                                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="green" width="full" justifyContent="space-between">
+                                    <HStack spacing={2}>
+                                        <MdHelp />
+                                        <Text>HOD</Text>
+                                    </HStack>
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuItem icon={<FaUserPlus />} onClick={() => { router.replace('/hod/hod-request') }}>Feature Requests</MenuItem>
+                                </MenuList>
+                            </Menu>}
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
@@ -182,7 +196,7 @@ const MenuDrawer = () => {
             <EditUserModal isOpen={isEditModalOpen} onClose={onEditModalClose} />
             <UserModalAdd isOpen={isModalOpen} onClose={onModalClose} />
             <NewFeature isOpen={isFeatureModalOpen} onClose={onFeatureModalClose} />
-            {/* <FeatureStatusModal isOpen={isFeatureStatusModalOpen} onClose={onFeatureStatusModalClose} /> */}
+            <FeatureStatusModal isOpen={isFeatureStatusModalOpen} onClose={onFeatureStatusModalClose} />
         </Box>
     );
 };
