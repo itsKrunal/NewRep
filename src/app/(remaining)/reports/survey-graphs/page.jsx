@@ -14,6 +14,7 @@ const MetricsPage = () => {
     const [selectedEmails, setSelectedEmails] = useState([]);
     const [selectedDepartments, setSelectedDepartments] = useState('');
     const questionsArray = require('../../../../Utils/questions')
+    const [responseCounts, setResponseCounts] = useState({});
 
     useEffect(() => {
         if (typeof selectedDepartments === 'undefined')
@@ -27,6 +28,8 @@ const MetricsPage = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get("/api/getSurvey");
+            const response2 = await axios.get("/api/getCountOfResponse")
+            setResponseCounts(response2.data)
             setSurveys(response.data.data);
         } catch (error) {
             console.error("Error fetching survey data:", error);
@@ -126,14 +129,14 @@ const MetricsPage = () => {
 
         return { totalYes, totalNo };
     };
-    
+
     const getBarGraphData = (metricPrefix) => {
         const filteredSurveys = surveys
             .filter(survey =>
                 (selectedEmails?.length === 0 || selectedEmails?.includes(survey.email)) &&
                 (selectedDepartments?.length === 0 || selectedDepartments?.includes(survey.department))
             );
-    
+
         const metricData = filteredSurveys.reduce((acc, survey) => {
             Object.keys(survey).forEach(key => {
                 if (key.startsWith(metricPrefix)) {
@@ -148,7 +151,7 @@ const MetricsPage = () => {
             });
             return acc;
         }, {});
-    
+
         const labels = Object.keys(metricData).map((key, index) => key);
         const yesData = labels.map(label => {
             const total = metricData[label].yes + metricData[label].no;
@@ -158,7 +161,7 @@ const MetricsPage = () => {
             const total = metricData[label].yes + metricData[label].no;
             return total > 0 ? (metricData[label].no / total) * 100 : 0;
         });
-    
+
         return {
             labels,
             datasets: [
@@ -175,7 +178,7 @@ const MetricsPage = () => {
             ]
         };
     };
-    
+
 
     const handleEmailChange = (value) => {
         setSelectedEmails(value);
@@ -189,7 +192,7 @@ const MetricsPage = () => {
     const departmentOptions = [...new Set(surveys.map(survey => survey.department))].map(department => ({ label: department, value: department }));
 
     const { totalYes, totalNo } = getInsights();
-   
+
     const options = {
         plugins: {
             tooltip: {
@@ -201,14 +204,14 @@ const MetricsPage = () => {
                         const datasetLabel = tooltipItem.dataset.label || '';
                         const dataIndex = tooltipItem.dataIndex;
                         const value = tooltipItem.raw;
-    
+
                         // Get the count from the dataset
                         const dataset = tooltipItem.dataset.data;
                         const totalCount = dataset.reduce((acc, curr) => acc + curr, 0);
-    
+
                         // Calculate percentage
                         const percentage = (value / totalCount) * 100;
-    
+
                         return `${datasetLabel}: ${value}%`;
                     }
                 }
@@ -230,15 +233,15 @@ const MetricsPage = () => {
             }
         }
     };
-    
-    
+
+
 
 
 
     return (
         <Box p={4} bg={"green.50"} height={'100vh'} w={'100%'}>
             <VStack spacing={6} align="stretch" mt={'3.5em'}>
-
+                {console.log("SACSDC", selectedDepartments, selectedEmails)}
                 <Card boxShadow={'lg'}>
                     <CardHeader>
                         <CustomHeading prop={'Analytical Reports'} />
@@ -293,6 +296,16 @@ const MetricsPage = () => {
                                     </CardHeader>
                                     <CardBody>
                                         <Flex gap={'20px'}>
+                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
+                                                <strong>Total Users:</strong> {responseCounts[selectedDepartments && selectedDepartments.length > 0 ? selectedDepartments.toLowerCase() : 'totalUsers']}
+                                            </Text>
+                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
+                                                <strong>Total Entries filled:</strong> {emailOptions.filter((item) => selectedDepartments?.length == 0 || selectedDepartments == item.department).length}
+                                            </Text>
+                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
+                                                <strong>Total Yes:</strong> {totalYes}
+                                            </Text>
+
                                             <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
                                                 <strong>Total Yes:</strong> {totalYes}
                                             </Text>
