@@ -6,6 +6,8 @@ import CustomHeading from "@/StyleComponents/PageHeader";
 import { Box, SimpleGrid, VStack, Heading, Card, CardHeader, CardBody, Flex, Text, Divider } from "@chakra-ui/react";
 import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, Tooltip, Legend, BarElement, registerables } from 'chart.js';
 import { Select as AntSelect } from 'antd'
+import { FaUsers, FaFileAlt, FaThumbsUp, FaThumbsDown, FaSmile } from 'react-icons/fa';
+
 
 ChartJS.register(...registerables, CategoryScale, LinearScale, ArcElement, Tooltip, Legend, BarElement);
 
@@ -290,34 +292,95 @@ const MetricsPage = () => {
                         </Card>
                         <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
                             <Box>
-                                <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">
+                                <Card boxShadow="lg" p={4} borderRadius="md" bg="white">
                                     <CardHeader>
                                         <Heading size="md" color="teal.600">Insights</Heading>
                                     </CardHeader>
                                     <CardBody>
-                                        <Flex gap={'20px'}>
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Total Users:</strong> {responseCounts[selectedDepartments && selectedDepartments.length > 0 ? selectedDepartments.toLowerCase() : 'totalUsers']}
-                                            </Text>
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Total Entries filled:</strong> {emailOptions.filter((item) => selectedDepartments?.length == 0 || selectedDepartments == item.department).length}
-                                            </Text>
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Total Yes:</strong> {totalYes}
-                                            </Text>
+                                        <Flex gap="20px" flexWrap="wrap">
+                                            {/* Total Users */}
+                                            <Flex
+                                                direction="column"
+                                                alignItems="center"
+                                                p={5}
+                                                background="blue.50"
+                                                borderRadius="md"
+                                                mb={2}
+                                                minWidth="180px"
+                                            >
+                                                <FaUsers size="24px" color="teal.500" />
+                                                <Text fontSize="lg" mt={2}>
+                                                    <strong>Total Users:</strong> {responseCounts[selectedDepartments && selectedDepartments.length > 0 ? selectedDepartments.toLowerCase() : 'totalUsers']}
+                                                </Text>
+                                            </Flex>
 
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Total Yes:</strong> {totalYes}
-                                            </Text>
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Total No:</strong> {totalNo}
-                                            </Text>
-                                            <Text fontSize="lg" p={5} background={'blue.50'} borderRadius={'20%'} mb={2}>
-                                                <strong>Overall Satisfaction:</strong> {getOverallSatisfaction()}%
-                                            </Text>
+                                            {/* Total Entries Filled */}
+                                            <Flex
+                                                direction="column"
+                                                alignItems="center"
+                                                p={5}
+                                                background="blue.50"
+                                                borderRadius="md"
+                                                mb={2}
+                                                minWidth="180px"
+                                            >
+                                                <FaFileAlt size="24px" color="teal.500" />
+                                                <Text fontSize="lg" mt={2}>
+                                                    <strong>Total Entries Filled:</strong> {emailOptions.filter((item) => selectedDepartments?.length == 0 || selectedDepartments == item.department).length}
+                                                </Text>
+                                            </Flex>
+
+                                            {/* Total Yes */}
+                                            <Flex
+                                                direction="column"
+                                                alignItems="center"
+                                                p={5}
+                                                background="blue.50"
+                                                borderRadius="md"
+                                                mb={2}
+                                                minWidth="180px"
+                                            >
+                                                <FaThumbsUp size="24px" color="teal.500" />
+                                                <Text fontSize="lg" mt={2}>
+                                                    <strong>Total Yes:</strong> {totalYes}
+                                                </Text>
+                                            </Flex>
+
+                                            {/* Total No */}
+                                            <Flex
+                                                direction="column"
+                                                alignItems="center"
+                                                p={5}
+                                                background="blue.50"
+                                                borderRadius="md"
+                                                mb={2}
+                                                minWidth="180px"
+                                            >
+                                                <FaThumbsDown size="24px" color="teal.500" />
+                                                <Text fontSize="lg" mt={2}>
+                                                    <strong>Total No:</strong> {totalNo}
+                                                </Text>
+                                            </Flex>
+
+                                            {/* Overall Satisfaction */}
+                                            <Flex
+                                                direction="column"
+                                                alignItems="center"
+                                                p={5}
+                                                background="blue.50"
+                                                borderRadius="md"
+                                                mb={2}
+                                                minWidth="180px"
+                                            >
+                                                <FaSmile size="24px" color="teal.500" />
+                                                <Text fontSize="lg" mt={2}>
+                                                    <strong>Overall Satisfaction:</strong> {getOverallSatisfaction()}%
+                                                </Text>
+                                            </Flex>
                                         </Flex>
                                     </CardBody>
                                 </Card>
+
                             </Box>
                         </Card>
                         <Card boxShadow={'lg'} p={4} borderRadius="md" bg="white">

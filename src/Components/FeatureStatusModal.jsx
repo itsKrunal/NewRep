@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Tag } from "antd";
-import { Modal, useToast, Box, Divider, Text, ModalBody, ModalContent, ModalHeader, ModalCloseButton } from "@chakra-ui/react";
+import { Table, Tag, Input } from "antd";  // Import Input from antd for search bar
+import { Modal, useToast, Box, Divider, Text, ModalBody, ModalContent, ModalHeader, ModalCloseButton, Flex } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
 const FeatureStatusModal = ({ isOpen, onClose }) => {
     const user = useSelector((state) => state.user);
     const [features, setFeatures] = useState([]);
+    const [searchText, setSearchText] = useState('');  // State for search input
     const toast = useToast();
 
     useEffect(() => {
@@ -34,6 +35,15 @@ const FeatureStatusModal = ({ isOpen, onClose }) => {
             console.error("Error fetching features:", error);
         }
     };
+
+    const handleSearch = (e) => {
+        setSearchText(e.target.value);
+    };
+
+    // Filter features based on search text
+    const filteredFeatures = features.filter(feature =>
+        feature.featureTitle.toLowerCase().includes(searchText.toLowerCase())
+    );
 
     const columns = [
         {
@@ -78,20 +88,30 @@ const FeatureStatusModal = ({ isOpen, onClose }) => {
             closeOnOverlayClick={false}
         >
             <ModalContent boxShadow="0 0 10px 2px rgba(0, 0, 0, 0.2)" >
+                <ModalHeader>Feature Status
 
-                <ModalHeader>Feature Status</ModalHeader>
+                <Flex alignItems={'flex-end'} justifyContent={'flex-end'} >
+                        <Input
+                            placeholder="Search by title"
+                            value={searchText}
+                            onChange={handleSearch}
+                            style={{ width: '30%' }}
+                        />
+                    </Flex>
+
+                </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Box mb={4}>
                         <Divider />
                     </Box>
+                    
                     <Table
-                        dataSource={features}
+                        dataSource={filteredFeatures}
                         columns={columns}
                         rowKey="_id"
                         pagination={false}
                         bordered
-                        style={{marginBottom : '20px'}}
                     />
                 </ModalBody>
             </ModalContent>

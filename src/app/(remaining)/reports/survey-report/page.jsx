@@ -1,7 +1,6 @@
 "use client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import * as XLSX from "xlsx";
 import {
   Box,
@@ -11,13 +10,18 @@ import {
   CardBody,
   VStack,
   useToast,
-  useDisclosure,
+  Input,
+  InputGroup,
+  InputLeftElement
 } from "@chakra-ui/react";
-import { Table, Pagination } from "antd";
+import { Table } from "antd";
+import { useRouter } from "next/navigation";
+import { SearchIcon } from "@chakra-ui/icons";
 import CustomHeading from "@/StyleComponents/PageHeader";
 
 const Page = () => {
   const [surveys, setSurveys] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const toast = useToast();
@@ -66,7 +70,7 @@ const Page = () => {
     { title: 'Value', dataIndex: 'value', key: 'value' },
   ];
 
-  const dataSource = surveys.flatMap(survey => {
+  const filteredData = surveys.flatMap(survey => {
     const { email, department, ...metrics } = survey;
     return Object.entries(metrics).map(([field, value]) => {
       const metric = field.match(/(trust|respect|fairness|camaraderie|pride)/i)?.[0];
@@ -78,7 +82,11 @@ const Page = () => {
         field,
         value,
       } : null;
-    }).filter(item => item);
+    }).filter(item => item)
+    .filter(item => {
+      return item.email.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             item.department.toLowerCase().includes(searchTerm.toLowerCase());
+    });
   });
 
   return (
@@ -89,10 +97,22 @@ const Page = () => {
             <CustomHeading prop={'Survey Report'} />
           </CardHeader>
           <CardBody>
-            <Card boxShadow={'0px 4px 6px rgba(0, 0, 0.2, 0.3)'} p={3}>
+            {/* Search Bar */}
+            <InputGroup mb={4}>
+              <InputLeftElement pointerEvents="none">
+                <SearchIcon color="gray.300" />
+              </InputLeftElement>
+              <Input 
+                placeholder="Search by email or department" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                width="30%" // Set the width to 30% as requested
+              />
+            </InputGroup>
+            <Card boxShadow={'0px 4px 6px rgba(0, 0, 0.2, 0.3)'} mt={2} p={3}>
               <Box overflowX="auto">
                 <Table
-                  dataSource={dataSource}
+                  dataSource={filteredData}
                   columns={columns}
                   pagination={{
                     current: currentPage,

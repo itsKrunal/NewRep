@@ -17,6 +17,7 @@ import {
   Text,
   Select,
   useToast,
+  Input,
 } from "@chakra-ui/react";
 import { ViewIcon, CheckIcon } from "@chakra-ui/icons";
 import { Table, Pagination } from "antd";
@@ -26,6 +27,8 @@ import axios from "axios";
 import { fileTypeFromBuffer } from 'file-type';
 
 const Page = () => {
+  const [priorityFilter, setPriorityFilter] = useState('');  // State for priority filter
+const [searchText, setSearchText] = useState('');          // State for search text
   const [features, setFeatures] = useState([]);
   const [selectedAttachment, setSelectedAttachment] = useState(null);
   const [attachmentType, setAttachmentType] = useState(""); // State for attachment type
@@ -135,6 +138,13 @@ const Page = () => {
     setAttachmentType('');
   };
 
+  const filteredFeatures = features
+  .filter(feature => 
+    (priorityFilter ? feature.priorityLevel === priorityFilter : true) &&
+    feature.featureTitle.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+
   const columns = [
     { title: 'Employee ID', dataIndex: 'eId', key: 'eId' },
     { title: 'Feature Title', dataIndex: 'featureTitle', key: 'featureTitle' },
@@ -210,11 +220,35 @@ const Page = () => {
           </CardHeader>
           <CardBody>
             <Card boxShadow={"0px 4px 6px rgba(0, 0, 0.2, 0.3)"} p={3}>
+            <Box display="flex" justifyContent="flex-end" alignItems="center" mb={4}>
+  {/* Priority Filter */}
+  <Select
+    placeholder="Filter by Priority"
+    value={priorityFilter}
+    onChange={(e) => setPriorityFilter(e.target.value)}
+    width="20%"
+    mr={2}
+  >
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+    <option value="Critical">Critical</option>
+  </Select>
+  
+  {/* Search Bar */}
+  <Input
+    placeholder="Search by Title"
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+    width="30%"
+  />
+</Box>
+
               <Table
-                dataSource={features.map((feature) => ({
-                  key: feature._id,
-                  ...feature,
-                }))}
+               dataSource={filteredFeatures.map((feature) => ({
+                key: feature._id,
+                ...feature,
+              }))}
                 columns={columns}
                 pagination={{
                   current: currentPage,
