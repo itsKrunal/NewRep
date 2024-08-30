@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     await AuthSchema.create({ email: mobileNumber, otp });
 
     setTimeout(async () => {
-      await AuthSchema.deleteMany()
+       AuthSchema.deleteMany()
     }, 60000 * 5);
 
     return NextResponse.json({
