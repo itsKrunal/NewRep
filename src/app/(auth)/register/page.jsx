@@ -135,7 +135,7 @@ export default function Register() {
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center" height="90vh">
-            <Box bg="gray.800" p={8} borderRadius="md" boxShadow="md" width={['90%', '80%', '60%', '40%']} maxWidth="500px" height={'45%'}>
+            <Box bg="gray.800" p={8} borderRadius="md" boxShadow="md" width={['90%', '80%', '60%', '40%']} maxWidth="500px" height={'55%'}>
                 <VStack spacing={4} align="stretch">
                     <Flex justifyContent={'center'} alignItems={'center'}>
 
